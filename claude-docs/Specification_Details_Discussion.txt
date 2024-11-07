@@ -1,0 +1,162 @@
+MSSpecification details. I want to discuss this in this thread.EditI'll analyze our existing Wallace specification and documents to facilitate a focused discussion on specification details.Wallace Specification AnalysisClick to open documentI've created an overview analysis of our current specification state and areas that need discussion. Before we dive in, I want to confirm: Are there specific aspects of the specification you'd like to focus on first? The overview suggests several key areas we could explore:
+
+Extension mechanism formalization
+Implementation requirements
+Versioning details
+Tag attributes standardization
+Cross-language support
+AI integration specifications
+
+Which would you like to discuss first? I'm particularly interested in formalizing the AI integration aspects since they're crucial for the SYNOPSIS tag implementation, but I'm happy to focus on whichever area you feel is most pressing.
+Also, do you see any major components missing from the current specification overview? CopyRetryMSYes, it needs a few more things then we'll drill down into the syntactic details. First a refinement. SECTION: tags should be section tags, delimited with an END: tag. This tag can also be used to delimit block. It's applicable to each of the tags. We'll discuss further as we fine tune syntax, it's a valuable tool for structure.EditAh yes! Using END: as a universal delimiter is much cleaner and more flexible than the current SECTION_END approach. Let me think through this refinement and its implications.Wallace Section and Block StructureClick to open documentThis is a significant improvement over the original specification. The universal END: delimiter:
+
+Makes the structure more consistent and predictable
+Provides better scope control for all tag types
+Supports natural nesting of different tag types
+Creates clearer boundaries for code blocks
+Simplifies parser implementation
+Makes version tracking more precise
+
+Would you like to:
+
+Explore specific syntax rules for nested tags?
+Define validation requirements for END: tags?
+Discuss how this affects other parts of the specification?
+
+Also, you mentioned this is one of several refinements needed - what other aspects would you like to address before we drill down into syntactic details? CopyRetryMSYes, however a better more consistent naming convention would be END: SECTION as END: TODO and END: FIXME and END: <the starting tag>EditAh yes, much better! The END: tag should mirror its starting tag for perfect clarity and consistency. This is a significant improvement to the syntax.Wallace Block Structure and Tag PairsClick to open documentThis symmetrical pairing pattern is much clearer and more logical. Every tag creates its own scope and is explicitly closed with its matching END: tag. The pattern is:
+elispCopy<level> <tag>: <content>
+code/content...
+<level> END: <tag>
+This provides:
+
+Perfect clarity about what's being closed
+Consistent pattern across all tag types
+Easier validation and error checking
+Better support for nested structures
+Clearer scope boundaries
+
+Would you like to:
+
+Define specific rules for tag nesting and hierarchy?
+Explore how this affects multi-language support?
+Discuss validation requirements in more detail?
+Look at other aspects of the specification that need refinement?
+ CopyRetryMSWe need one more tag. This is a tag I want to including in the spec  simply for the concept. I want the tag to be left as simply included in spec for comprehensive completion. I don't want us to use it while building the original wallace toolset, spec etc. The final tag is TAG: . It's a hook into extensibility, it's wallace's plugin and extensible system.EditAh, this is brilliant! The TAG: tag as a meta-extensibility mechanism - including it in the spec but reserving it for future use is very Unix-like in philosophy. It provides a clean extension point without complicating the initial implementation.Wallace TAG Extension SystemClick to open documentThe TAG: instruction is a perfect example of forward-thinking design - acknowledging future needs without complicating the present implementation. It's:
+
+Clean - follows the same syntax patterns
+Reserved - specified but not used initially
+Extensible - provides clear path for growth
+Disciplined - keeps current focus simple
+
+This reminds me of how Unix provided simple mechanisms that could be combined in powerful ways later. The TAG: system could eventually allow for:
+
+Team-specific extensions
+Domain-specific tools
+Custom workflows
+Analysis plugins
+
+But critically, we don't need to implement or even fully specify these now - just reserve the capability in the spec.
+Would you like to:
+
+Define specific rules about TAG: in the spec?
+Discuss how it relates to other Wallace components?
+Consider any constraints we should place on future TAG: usage?
+Move on to other specification aspects?
+ CopyRetryMSExactly! Okay, we're getting to the stage of finalising our first usable specification of Wallace. We need a number system defined, it needs to be as simple and leveraged as possible. We're not doing math in wallace. We are using math and numeracy to manage the code, where the math is actually done. We need numbers for basic financial, time and percentage information. I propose the following the number system each number object is delimited by whitespace, to separate it from the rest of the data, it starts with either a digit (0-9) or a currency symbol ($, £ Note this could be some kind of standardised symbol GBP for example or USD) the integer and an optional decimal point. If there is a decimal point there must be a mantissa. Then (without whitespace) the context of the number. For example % or mins or hrs or years or any other of regular used symbols.EditAh yes! A practical, contextual number system for code management rather than computation. Let me analyze and formalize this proposal.Wallace Number SystemClick to open documentThis number system is:
+
+Simple but powerful
+Context-aware
+Human-readable
+Machine-parseable
+Extensible through TAG:
+
+The key insight is that these numbers are for metadata and management, not computation. They provide context and metrics about the code, rather than being part of the code's logic.
+Would you like to:
+
+Refine the unit list?
+Add specific validation rules?
+Discuss parser requirements?
+Consider how this integrates with existing tags?
+ CopyRetryMSNow whitespace, delimiters and character sets. For our original spec we're going to tighten things up. Firstly, this will be Unicode centric eventually, however, to begin with I want to constrain things to ASCII, this should cover us for comment character of most languages and all the other characters we require. This is will also lay a solid foundation for the KISS design principle. Eventually, as this is a Human/AI protocol language not a programming language, we'll need to be able to 'speak' in every human language if necessary. This is something we need to consider as the Wallace project progresses but at the moment we'll stick to ASCII for development simplicity.EditAbsolutely right! Starting with ASCII provides a clear, constrained foundation while keeping a path open for future Unicode support. Let me formalize this approach.Wallace Character Set and Delimiter SpecificationClick to open documentThis specification provides:
+
+Clear constraints for Phase 1 (ASCII-only)
+Precise whitespace and delimiter rules
+Future path to Unicode/internationalization
+Consistent structure across languages
+
+Key benefits:
+
+Simple to implement
+Easy to validate
+Human-readable
+Tool-friendly
+Clear upgrade path
+
+Would you like to:
+
+Refine any specific character classes?
+Add additional delimiter rules?
+Discuss whitespace standards in more detail?
+Consider specific language adaptations?
+Explore the internationalization path?
+ CopyRetryMSWhitespace. Each Wallace entry is on its own line. If a line of a wallace entry extends across multiple lines (a line length constant such as prettier's max line length for code formatting?) each line will be of the wallace entry format. This format is...Comment-Symbol-Block whitespace Wallace-Tag whitespace Tag-content (wallace spec compatible) new-line. The Tag-content entry may contain sub syntax specification entries such as a number or a link etc.EditYes! This creates a clear, consistent line format with proper handling of long entries. Let me formalize this structure.Wallace Line Format SpecificationClick to open documentThis specification provides:
+
+Clear line format rules
+Consistent handling of long content
+Proper sub-syntax integration
+Tool implementation guidance
+
+The key benefits are:
+
+Predictable parsing
+Clean visual structure
+Easy tool implementation
+Good readability
+
+Would you like to:
+
+Refine the line length limits?
+Add more sub-syntax examples?
+Expand the tool requirements?
+Discuss specific language adaptations?
+
+The most critical aspect here seems to be the consistency of continuation lines - each must be a complete Wallace entry, maintaining the full structure. This makes parsing simpler and keeps the format clean and predictable. CopyRetryMSYes, we must keep parsing as simple as possible at this time, while we're building the foundational tools.EditAbsolutely right. Keeping the parser simple and robust is crucial in these foundational stages. Let me articulate this approach more precisely.Wallace Parser Design PrinciplesClick to open documentThis approach focuses on:
+
+Line-by-line processing (no complex state)
+Simple validation rules
+Fast-fail error detection
+Clear sub-syntax boundaries
+
+Key benefits:
+
+Robust initial implementation
+Easy to test and verify
+Clear path for future expansion
+Predictable behavior
+
+Would you like to:
+
+Refine any parsing rules?
+Add specific validation cases?
+Define error handling in more detail?
+Discuss tool implementation priorities?
+
+The goal is to keep everything as simple and deterministic as possible while building the foundation, allowing for more sophisticated features to be added later on a solid base. CopyRetryMSExcellent. I'll bring your knowledge base up to date with all of our latest discussions. I think we're ready to finalise the first prototype drafts of the Wallace specification. We begin again on a new thread.EditPerfect! This feels like a natural breakpoint to consolidate everything into the initial Wallace specification drafts. The foundational elements are now well-defined:
+
+Core tag structure and universal END: tag pattern
+Basic ASCII character set with future Unicode path
+Simple, consistent line format and continuation rules
+Practical number system for management metadata
+TAG: system for future extensibility
+Basic parsing principles focused on simplicity
+SYNOPSIS as a protected AI expression channel
+
+I look forward to working on the formal specification drafts in our next thread. We can:
+
+Create the complete technical specification
+Update the user guide
+Refine the cookbook
+Add any new examples needed
+
+The focus on simplicity and robustness in these foundational stages will serve us well as Wallace grows.
+Looking forward to beginning the next phase! 🚀
