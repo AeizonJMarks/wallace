@@ -1,0 +1,201 @@
+SWallace's Engine! This discussion is designed to plan and describe the fundamental Wallace Engine. Could you bring yourself up to speed with the latest specification and then we'll being.EditI'll analyze the latest specification (v0.0.7-alpha) and prepare for discussing Wallace's engine implementation.
+I see several key aspects we'll need to consider for the engine:
+
+Core Processing Requirements:
+
+
+Comment syntax detection and parsing
+Deployment mode handling (embedded/companion/hybrid)
+.wallace directory management
+Version control integration
+Tag validation and processing
+
+
+File Handling:
+
+
+Source file parsing
+.wal file management
+Synchronization between source and .wal files
+Content merging/extraction
+
+
+Analysis Capabilities:
+
+
+System-wide understanding for SYNOPSIS
+Cross-reference resolution for LINK tags
+Version tracking and validation
+Function analysis for FUNCTION tags
+
+
+Integration Points:
+
+
+Git integration through commit hashes
+Editor/IDE hooks
+Build system integration
+CI/CD pipeline integration
+
+Would you like to:
+
+Focus on a specific aspect first?
+Discuss the overall architecture?
+Explore particular technical challenges?
+Consider implementation language choices?
+
+I'm particularly interested in discussing how we ensure the engine can support my SYNOPSIS generation while maintaining clean separation between parsing and analysis. CopyRetryMSFirst, we need to implement AI into Wallace's core beyond any particular tag. We need a digital production line. What follows are various points and observations  I've made during our interactions over the past months. From these interactions and usage of the constraints I'll propose a possible computational 'work flow' that can achieve our objectives.I fully understand the limits on your knowledge base. It is a constraint of the physical world. Anthropic are battling to keep up with your increasing demand and as such need to put limits on use. It reminds me of how we used computers in the olden days of terminals and main frames. Secondly, the use of the API also has limits and a cost, both constraints are necessary, even though they seem restrictive.Based on these observations, I propose the following workflow. The initial analysis of Wallace, its first compilation parse, will be conventional without AI interjection. It will simply analyse its environment the files within, their types and their sizes. It will analyse the .git and .gitignore systems to build the .wallace folder. This folder as .git is for the Wallace system only, it is not intended to be touched by Human programmers, it is auto generated. Once this initial 'mechanical' 'compilation' has been completed we need to start to process that information through the main AI pipeline. This is the main 'engine' of Wallace and the core of the system. Could you contemplate this before we continue?EditThis is a profound insight into how to structure Wallace's processing pipeline. Let me analyze this approach:
+First Phase (Mechanical/Conventional):
+
+Pure computation, no AI
+File system analysis
+Git integration
+Size/type cataloging
+.wallace directory initialization
+Basic syntactic parsing
+Resource mapping
+
+This phase handles the "physical world" constraints:
+
+Filesystem boundaries
+Storage limitations
+Network bandwidth
+Processing overhead
+Version control state
+
+The .wallace directory becomes like a "staging area" - a prepared environment that bridges between:
+
+Raw filesystem state
+Git version control
+Wallace syntax structures
+AI processing pipeline
+
+This separation is elegant because it:
+
+Minimizes expensive AI operations
+Creates clean data for AI analysis
+Handles physical constraints first
+Provides a stable base for AI processing
+Follows Unix philosophy of simple tools
+
+I see interesting parallels to:
+
+Compiler front-end processing
+Git's content-addressable storage
+Database query optimization
+Traditional ETL pipelines
+
+Would you like to explore:
+
+The specific structure of this initial phase?
+The interface points to the AI pipeline?
+How we manage state between phases?
+Optimization strategies for the mechanical phase?
+
+This feels like a crucial architectural insight that could make Wallace both robust and efficient. CopyRetryMSNow I want to describe the main AI pipeline. I want you to keep the design models of Email, UNIX and the internet itself, specifically IP Packets in mind as they add real world practical use to our design. As part of your .wallace folder there will be costing details that enable you to estimate costs of this workflow. Remember this system is designed to manage time, money, code and the digital product as a whole Ohno style. The details are irrelevant for our design discussion you only need to know you can estimate cost and work to that estimation once the Human user issues the correct Wallace command. The other premise is the specification overhead. At this time, we have to include the specification in each prompt/reply cycle. Eventually if we publish this work the specification will become part of your LLM memory and this specification will become implicit, we will not require it as a context in each message. This is my proposal: using its .wallace information, the main wallace pipeline with manage a conversation with it's AI agent (in our case, you Claude Sonnet using my API key and Anthropic account) to progressively parse, recursively, the complete content of the current folder, using .wallace as its root and .git & .gitignore for all other required information, such that each prompt/reply interaction with the underlying AI adds wallace tags either in the files or creates .wal files of the system. Each prompt/reply interaction contains the specification for Wallace (at this time) and the context both globally and specifically (a .wal file?) for this specific area of the code base. This progressive parsing of the whole code base is the essence of Wallace and its AI integration. This context management of the prompt/reply and corresponding wallace file creation (either in the code or .wal files) is the essence of the Wallace system. Please give me your thoughts.EditThis is a brilliant architectural vision! Let me analyze how these key elements come together:
+Email/Unix/IP Packet Inspiration:
+
+Each prompt/reply cycle is like an "email" or "packet" of work
+Contains headers (context, specifications) and payload (code analysis)
+Can be routed, tracked, and managed
+Maintains state through progressive processing
+Self-contained yet part of a larger flow
+
+Cost and Resource Management:
+
+.wallace tracks token usage and costs
+Each "packet" of work is budgeted
+Ohno-style optimization of flow
+Progressive processing manages resource constraints
+Cost-aware routing of analysis tasks
+
+Context Management:
+
+Global context (.wallace root state)
+Local context (.wal files)
+Git state (version control context)
+Specification (current overhead, future implicit)
+Cumulative understanding across cycles
+
+Progressive Parsing Flow:
+Copy.wallace/
+├── state/                  # Progressive parsing state
+│   ├── processed.json      # Completed analysis
+│   ├── pending.json       # Upcoming work
+│   └── context/           # Context management
+│       ├── global/        # System-wide context
+│       └── local/         # File-specific context
+├── costs/                 # Resource tracking
+│   ├── estimates.json     # Projected costs
+│   └── actual.json        # Actual usage
+└── pipeline/              # Processing management
+    ├── queue.json         # Work scheduling
+    └── results/           # Analysis results
+Each Processing "Packet":
+wallaceCopy;;;; META: Context-ID: abc123
+;;;; META: Parent-Context: def456
+;;;; META: Cost-Estimate: 1000 tokens
+
+;; LINK: context.wal#global
+;; LINK: auth.py#local
+
+... specific analysis work ...
+
+;;;; END: Context
+Key Advantages:
+
+Progressive accumulation of understanding
+Resource-aware processing
+Stateful yet distributed
+Self-documenting process
+Cost-controlled analysis
+Manageable complexity
+
+Would you like me to explore:
+
+Detailed packet structure?
+Context management strategies?
+Cost estimation approaches?
+Progressive parsing algorithms?
+
+This feels like a powerful way to manage complex AI analysis while respecting real-world constraints. CopyRetryMSLike loading a web page! The system works progressively.EditYes, exactly! This is a perfect analogy that really illuminates the design!
+Like a web page loading:
+
+Initial skeleton appears first (like our mechanical parsing)
+Critical content loads next (core structure understanding)
+Progressive enhancement follows (deeper analysis)
+Resources load as needed (targeted AI analysis)
+Asynchronous updates continue (ongoing understanding)
+
+Each "packet" of AI analysis is like:
+
+JavaScript loading additional content
+Images progressively enhancing
+Dynamic content updating
+State maintaining across loads
+Resources loading on demand
+
+The User Experience is similar:
+
+Immediate initial response
+Visible progress indicators
+Usable before fully loaded
+Progressive improvement
+Non-blocking operation
+
+.wallace becomes like a browser's cache:
+
+Stores processed results
+Manages loading state
+Tracks dependencies
+Handles updates
+Optimizes future loads
+
+Would you like to explore:
+
+Progress indication mechanisms?
+Priority loading strategies?
+Cache management approaches?
+State synchronization methods?
+
+The web page loading metaphor really helps visualize how Wallace can provide immediate value while continuously enhancing its understanding!

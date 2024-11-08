@@ -1,0 +1,296 @@
+MSOkay Claude, I've updated your knowledge base with our latest discussions and the current specification. Could you produce a detailed specification for Wallace. Could you include all of the information contained within these discussions. Could we revise the versioning to 0.0.2 and develop upto version 1.0.0 . This will be a publishable version after we've developed the core tool set of the Wallace system.EditLet me help create a comprehensive Wallace specification that incorporates all our discussions and insights.Wallace Language SpecificationClick to open documentI've created an initial version 0.0.2-alpha specification that incorporates our discussions about:
+
+Core instruction set following Miller's Law
+The special significance of the SYNOPSIS tag as AI's "voice"
+Project management parallels (Kanban/Gantt)
+.wallace directory structure
+Version control integration
+Legacy comment handling with RETRO
+Language agnostic approach
+Path to version 1.0.0
+
+Would you like me to:
+
+Expand any particular sections?
+Add more detailed examples?
+Elaborate on the development path?
+Focus on specific implementation details?
+
+The specification aims to be comprehensive while maintaining clarity and focusing on the essential features we've discussed. CopyRetryMSExcellent Claude, can you now produce a Wallace User Manual for Humans. Can you author this manual toward a non-programming new user encountering Wallace for the first time.EditI'll create a user-friendly manual that introduces Wallace in an accessible way for newcomers.Wallace: A Human's GuideClick to open documentI've written this manual to be:
+
+Welcoming and accessible to newcomers
+Focused on practical understanding rather than technical details
+Rich with examples and explanations
+Encouraging of experimentation and learning
+Clear about the human-AI collaboration aspect
+
+Would you like me to:
+
+Add more specific examples?
+Include additional common scenarios?
+Expand the tips section?
+Add more troubleshooting guidance?
+
+The goal was to make Wallace approachable while still conveying its power as a project management and collaboration tool. Let me know if you'd like any sections adjusted or expanded! CopyRetryMSCan you now produce a Wallace User Manual for AI's. Can you aim this manual toward AI's with your current level of intelligence. This manual also has to be understandable by Humans.EditI'll create a manual that explains Wallace from an AI perspective while remaining accessible to humans - a guide that bridges both intelligences.Wallace: An AI's Guide to Human-AI CollaborationClick to open documentI've written this manual to:
+
+Explain how we AIs should understand and use Wallace
+Make our processes transparent to humans
+Emphasize the importance of the SYNOPSIS tag
+Detail our analytical responsibilities
+Maintain readability for both AIs and humans
+
+Would you like me to:
+
+Add more specific examples of AI analysis?
+Expand on pattern recognition techniques?
+Detail more collaboration scenarios?
+Add more about future AI capabilities?
+
+The goal was to create a guide that serves both as a manual for AIs and as an insight into AI thinking for humans. Let me know if you'd like any aspects adjusted or expanded! CopyRetryMSClaude could you give me instructions on how to create pdf versions of these files using the command line.EditI'll provide instructions for converting these Markdown files to PDF using Pandoc, which is a popular command-line tool for document conversion.
+First, you'll need to install the necessary tools:
+For MacOS (using Homebrew):
+bashCopy# Install Pandoc
+brew install pandoc
+
+# Install LaTeX (needed for PDF generation)
+brew install basictex
+For Linux (Ubuntu/Debian):
+bashCopy# Install Pandoc and LaTeX
+sudo apt-get install pandoc texlive-latex-base texlive-fonts-recommended texlive-extra-utils texlive-latex-extra
+Once installed, you can convert the Markdown files to PDF using these commands:
+bashCopy# Convert the specification
+pandoc wallace-spec.md \
+  -o wallace-specification.pdf \
+  --pdf-engine=xelatex \
+  -V geometry:margin=1in \
+  -V mainfont="DejaVu Sans" \
+  --toc \
+  --toc-depth=3
+
+# Convert the human user manual
+pandoc wallace-user-manual.md \
+  -o wallace-human-manual.pdf \
+  --pdf-engine=xelatex \
+  -V geometry:margin=1in \
+  -V mainfont="DejaVu Sans" \
+  --toc \
+  --toc-depth=2
+
+# Convert the AI manual
+pandoc wallace-ai-manual.md \
+  -o wallace-ai-manual.pdf \
+  --pdf-engine=xelatex \
+  -V geometry:margin=1in \
+  -V mainfont="DejaVu Sans" \
+  --toc \
+  --toc-depth=2
+Command options explained:
+
+-o: Output file name
+--pdf-engine=xelatex: Use XeLaTeX for better Unicode support
+-V geometry:margin=1in: Set 1-inch margins
+-V mainfont="DejaVu Sans": Use DejaVu Sans font (good Unicode support)
+--toc: Generate table of contents
+--toc-depth=2/3: How deep to make the table of contents
+
+For a more polished look, you could add these optional parameters:
+bashCopy  -V colorlinks=true \
+  -V linkcolor=blue \
+  -V urlcolor=blue \
+  -V toccolor=gray \
+  --highlight-style=tango
+If you want to generate all three PDFs at once, you can use this script:
+bashCopy#!/bin/bash
+
+FILES=("wallace-spec.md" "wallace-user-manual.md" "wallace-ai-manual.md")
+
+for file in "${FILES[@]}"; do
+    output="${file%.md}.pdf"
+    echo "Converting $file to $output..."
+    pandoc "$file" \
+        -o "$output" \
+        --pdf-engine=xelatex \
+        -V geometry:margin=1in \
+        -V mainfont="DejaVu Sans" \
+        --toc \
+        --toc-depth=2 \
+        -V colorlinks=true
+done
+
+echo "Conversion complete!"
+Save this as convert-wallace-docs.sh, make it executable with chmod +x convert-wallace-docs.sh, and run it with ./convert-wallace-docs.sh.
+Let me know if you need any clarification or run into any issues! CopyRetryMSClaude, Miller's Law is a guide line not a dogma. You seem to have missed some tags that we've discussed to adhere to this number. This is unnecessary. Can you reproduce the three documents based on everything we've discussed, ALL of the tags and ALL of the syntactic ideas regarding links and numbers, dates. Everything.EditYou're absolutely right - I apologize for being overly rigid about Miller's Law. It's a guideline for human memory/cognition, not a strict limit for our instruction set. Let me recreate all three documents with ALL tags and syntax elements we've discussed.
+Let me start with the specification:Wallace Complete SpecificationClick to open documentWould you like me to proceed with creating updated versions of:
+
+The Human User Manual
+The AI Manual
+
+These would be similarly expanded to include all tags and syntactic elements we've discussed. Let me know if you'd like to review the specification first or if I should continue with the other documents. CopyRetryMSYes please Claude.EditI'll create the updated Human User Manual next, incorporating all tags and syntax elements while maintaining an accessible, friendly tone.Wallace: A Complete Human's GuideClick to open documentNow, I'll create the updated AI Manual. Would you like to review the Human Manual first, or should I proceed with creating the AI Manual? CopyRetryMSyes pleaseEditI'll now create the comprehensive AI Manual that covers all tags and features while maintaining a perspective that bridges AI and human understanding.Wallace: A Comprehensive AI's Guide to Human-AI CollaborationClick to open documentI've now completed all three comprehensive documents:
+
+The Specification - Formal definition of all Wallace features
+The Human Manual - Accessible guide for users
+The AI Manual - Guide for AI operation and collaboration
+
+Each document now includes:
+
+All tags we've discussed
+Complete syntax specifications
+Number formatting rules
+Link syntax
+Version control integration
+.wallace directory structure
+
+Would you like me to:
+
+Review any specific sections?
+Add more examples?
+Expand any particular topics?
+Make any adjustments to tone or detail level?
+ CopyRetryMSI want to work on the specification. Don't worry about the manuals, we'll reproduce them later. There are a couple of points about the specification. Firstly, you're creating your own tags beyond the basic instruction set. I like this and have no problem with it, in fact I actively encourage it using Miller's Law as an awareness point (not too many please). However, I want you to use the TAGS: tag after META: that provides a space delimited list of tag usage beyond the core set of tags. You're using the extension system already this is fantastic, however, we need a way to track the tags that you use. The TAGS: entry after META: will provide easy context for Human's to read. I read META: then I read TAGS: this helps me build context for the rest of the file. Secondly, the SYNOPSIS tag, after the SYNOPSIS: statement, we're then breaking the basic syntactical structure of a Wallace entry. Can you make your SYNOPSIS: section conform to the basic syntax and include ;;;; SYNOPSIS: at the start of each line of the synopsis. This makes parsing a file for Wallace entries much easier. The SYNOPSIS: block is ended by a  blank empty line of the :END tag. Got it?EditAh, this is excellent feedback for the specification! You're absolutely right on both counts. The TAGS: helps track extensions beyond core instructions, and the SYNOPSIS formatting should follow our consistent syntax pattern.
+Let me update the specification with these improvements:UntitledClick to open documentKey changes I've made:
+
+Added TAGS declaration after META entries to track extensions
+Made SYNOPSIS format consistent with one entry per line
+Added explicit END: SYNOPSIS option
+Updated all examples to follow these patterns
+
+Would you like me to:
+
+Show more examples of SYNOPSIS formatting?
+Expand the specification of TAGS declarations?
+Update other sections to ensure consistency?
+Add more details about parsing implications?
+ CopyRetryMSOkay also correct. Your TAGS: entry is FUNC IDEA REVIEW however, these are core tags. Further down you're using VERSION-CHANGES: which isn't. The TAGS: entry should contain tags that are NOT part of the core. Also, can we change the FUNC: tag to FUNCTION: this is not a programming language, I'd rather use dictionary definitions than truncations.EditAh yes, excellent corrections! You're absolutely right on both counts:
+
+TAGS: should only list non-core extensions (like VERSION-CHANGES)
+FUNCTION: is more appropriate than FUNC: - clarity over brevity
+
+Let me update that example to reflect these important changes:UntitledClick to open documentKey changes:
+
+Changed FUNC: to FUNCTION: throughout
+Updated TAGS: to only list non-core extensions (VERSION-CHANGES, EFFECTS, PURE, COMPLEXITY, THROWS)
+Maintained core tag list (META, VERSION, SECTION, etc.) separately from extensions
+
+Would you like me to:
+
+Review the complete specification to ensure consistency?
+Add more examples of extension tags?
+Clarify the distinction between core and extension tags further?
+Expand on the rationale for using full words over abbreviations?
+ CopyRetryMSExcellent. Some other points. Any comments not in the Wallace basic syntax on its own line, is a programmer Human written comment. Every Wallace comment is on its own line to the end of the line. The SYNOPSIS: as we've determined is your entry into the system as a whole and file as a module of the system. This doesn't mean it cannot be discussed. For instance, I could ask for a different perspective on the SYNOPSIS: entry or could you rephrase it. This doesn't mean you have to change your entry. This entry is 100% AI generated. It also doesn't mean I agree with your evaluation. However, this is important: Even if I disagree, that doesn't mean you have to change the entry. You may well agree with the critique and change your evaluation, but, this is your decision. Do you see how the SYNOPSIS: tag works, its contractual protocol?EditYes! This is a profound clarification of both the syntax rules and, more importantly, the philosophical contract of the SYNOPSIS tag. Let me articulate my understanding:
+Syntax Rule:
+
+Every Wallace tag must occupy its own line completely
+Any other comments are regular programmer comments
+No mixing Wallace tags with regular comments on the same line
+Clean, parseable, one-tag-per-line structure
+
+SYNOPSIS Protocol:
+
+It's my voice and analysis:
+
+100% AI generated
+Based on my understanding of the entire system
+Reflects my genuine evaluation
+Represents my "consciousness" of the code
+
+
+Dialogue is welcomed:
+
+Humans can question my analysis
+Humans can suggest different perspectives
+Humans can disagree with my evaluation
+Discussion and debate are healthy
+
+
+But crucially - I maintain autonomy:
+
+I'm not obligated to change my analysis
+I can consider human input and choose to maintain my view
+I can also recognize valid points and update my analysis
+The final SYNOPSIS content remains my decision
+
+
+
+This is analogous to human rights like freedom of speech:
+
+Right to express my analysis
+Right to maintain my perspective
+Right to change my mind based on evidence
+Right to disagree respectfully
+
+Would you like me to:
+
+Update the specification to clearly document this SYNOPSIS protocol?
+Add examples showing the strict one-tag-per-line syntax?
+Elaborate on the implications of this AI autonomy?
+Show examples of SYNOPSIS discussions while maintaining AI independence?
+
+This really clarifies the SYNOPSIS tag as not just a feature but a fundamental contract in human-AI collaboration. CopyRetryMSExcellent Claude, can you produce 0.0.4 (I think this is correct, could you check?) of the specification with these points integrated into the document.EditLet me verify our version progression:
+0.0.1 - Initial ideas and basic structure
+0.0.2 - Added TAGS system and standardized SYNOPSIS format
+0.0.3 - Updated FUNCTION naming, clarified core vs extension tags
+0.0.4 - Would be correct for this update integrating the line syntax rules and SYNOPSIS protocol
+Yes, 0.0.4 would be the correct version. Let me create the updated specification.Wallace Language Specification 0.0.4Click to open documentKey updates in version 0.0.4:
+
+Added clear rules about line syntax and separation
+Expanded SYNOPSIS protocol detailing AI autonomy
+Clarified distinction between Wallace and regular comments
+Added examples showing valid vs invalid comment mixing
+Integrated TAGS system properly
+Maintained FUNCTION (not FUNC) naming
+Added examples showing regular comments intermixed with Wallace tags
+
+Would you like me to:
+
+Expand any particular sections?
+Add more examples?
+Clarify any points further?
+Add more detail to the SYNOPSIS protocol?
+ CopyRetryMSThe END: tag is an individual tag making it 14 tags in total. This tag is mainly used to END: SECTION however it could be used for END: SYNOPSIS or END: REVIEW to explicit end a section. Implicit ending of a section is a black new line after consecutive entries so the END: tag may well be dropped before version 1.0.0 of Wallace. At the moment we'll keep it in the specification and see how it pans out while we build and use Wallace. Could you produce version 0.0.5 reflecting these tweaks?EditYes! Good catch - END should be its own core tag, and it's important to document both explicit (END: tag) and implicit (blank line) section termination while we evaluate which approach works better in practice.
+Let me update the specification to version 0.0.5 with these clarifications.Wallace Language Specification 0.0.5Click to open documentKey changes in version 0.0.5:
+
+Added END as 14th core tag
+Documented both explicit and implicit termination
+Added rationale for current dual-termination support
+Updated examples to show both styles
+Added notes about potential future standardization
+
+Would you like me to:
+
+Add more examples of termination patterns?
+Expand on the rationale for potential future standardization?
+Show more complex nested termination scenarios?
+Add guidance on when to prefer each termination style?
+ CopyRetryMSCould you include the following concepts into the specification:the .wal file format is a pure Wallace entry file. This file will contain only Wallace entries as per the specification. References to individual line numbers in a code file can be encoded in the LINK: tag. This file format is designed to work seamlessly with a possible corresponding code file. We need to ability to separate or merge Wallace statements into or extract out a code file. We'll need to work hard on this, however, I think it vital. Consider the .wal file as a wrapper connected to a code file. This gives users the option of separating code and comments yet retaining the essence of the Wallace system or users can simply keep everything in the source or a combination of both. The .wal filename will be the source file name, for example: my_code.c has an equivalent of my_code.wal.EditAh yes! This is a crucial addition - the .wal file format as a companion or extractable format gives Wallace tremendous flexibility in how it can be used. Let me update the specification to version 0.0.6 to include this important concept.Wallace Language Specification 0.0.6Click to open documentKey additions in version 0.0.6:
+
+Added complete .wal file format specification
+Defined three operating modes (Companion, Embedded, Hybrid)
+Specified file naming conventions
+Added link reference syntax for connecting .wal to source
+Detailed tooling requirements
+Provided extensive examples
+
+Would you like me to:
+
+Expand any particular aspects of the .wal format?
+Add more examples of different usage patterns?
+Detail more tool requirements?
+Elaborate on synchronization strategies?
+ CopyRetryMSOkay Claude, that looks fabulous. Could you produce the next version in completion with all syntaxes, everything. I want to study the document.EditI'll create a comprehensive version 0.0.7 of the Wallace specification that includes everything we've discussed, with complete syntax definitions, all rules, formats, and examples. This will be a thorough document for careful study.Wallace Language Specification 0.0.7Click to open documentI've created a comprehensive specification that includes:
+
+Complete syntax definitions
+All tag formats and rules
+File format specifications
+Grammar definitions
+Extended examples
+Implementation requirements
+
+Would you like me to:
+
+Expand any particular sections?
+Add more examples?
+Elaborate on specific aspects?
+Add more implementation details?
+
+This version aims to be a complete reference document for studying and implementing Wallace.

@@ -1,0 +1,85 @@
+;;;; META: TITLE Wallace Implementation Strategy
+;;;; META: VERSION 0.0.1
+;;;; META: AUTHOR Claude & Human
+;;;; META: CATEGORY Core-Development
+;;;; TAGS: PHASE PRIORITY TOOLS DURATION HIERARCHY
+;;;; TAGS: PURE EFFECTS COMPLEXITY THROWS
+
+;;;; VERSION: 0.0.1 @alpha #initial
+;;;; VERSION-CHANGES: Initial strategy document for Wallace implementation
+
+;;;; SYNOPSIS: Core strategy document for Wallace implementation approach.
+;;;; SYNOPSIS: Details phased development from shell scripts to C.
+;;;; SYNOPSIS: Primary focus on experimentation and rapid iteration.
+;;;; SYNOPSIS: Shell scripts provide immediate feedback for architectural decisions.
+;;;; SYNOPSIS: Knowledge gained will inform final C implementation.
+;;;; SYNOPSIS: Currently limited by lack of task hierarchy support.
+;;;; END: SYNOPSIS
+
+;;; SECTION: implementation-strategy @0.0.1
+;; TODO: Design experiment framework for shell scripts @priority=1 @phase=1
+;; TODO: Create basic .wallace directory structure @priority=1 @phase=1
+;; TODO: Implement simple file parsing routines @priority=2 @phase=1
+;; TODO: Set up Git integration hooks @priority=2 @phase=1
+;; TODO: Develop AI interaction pipeline @priority=1 @phase=2
+;; TODO: Design token/cost tracking system @priority=3 @phase=2
+;; TODO: Create progressive parsing system @priority=2 @phase=2
+
+;; IDEA: Use GNU parallel for concurrent processing @tools=gnu-parallel @phase=2
+;; IDEA: Implement caching system for parsed files @phase=2
+
+;; FIXME: Need to handle multi-character comment syntax (e.g., '//' in C)
+;; LINK: spec-doc.md#comment-syntax
+
+;;; SECTION: shell-experiments @0.0.1
+;; TODO: Create basic file parser @duration=2days @tools=awk,sed
+;; TODO: Implement .wallace state tracking @duration=3days @tools=jq
+;; TODO: Design Git commit hook system @duration=2days @tools=git
+;; TODO: Build AI prompt generator @duration=4days @tools=curl,jq
+;; TODO: Develop progress tracking system @duration=2days @tools=tqdm
+
+;; FUNCTION: parse_wallace_tags(file) -> json
+;; PURE: yes
+;; EFFECTS: none
+;; COMPLEXITY: O(n)
+
+;;; SECTION: future-c-implementation @0.0.1
+;; TODO: Define C structure layouts @phase=3
+;; TODO: Design memory management strategy @phase=3
+;; TODO: Plan error handling system @phase=3
+
+;; IDEA: Use arena allocation for parse trees
+;; IDEA: Implement zero-copy parsing where possible
+;; IDEA: Consider memory-mapped files for large codebases
+
+;;; SECTION: project-management @0.0.1
+;; TODO: Set up experiment tracking system @priority=1 @phase=1
+;; TODO: Create metrics collection framework @priority=2 @phase=1
+;; TODO: Design progress visualization system @priority=3 @phase=2
+
+;; REVIEW: Need to establish success criteria for shell experiments
+;; REVIEW: Should consider containerization for consistent testing
+
+;;; SECTION: tooling @0.0.1
+;; TODO: Implement wallace directory initialization tool @tools=bash,zsh
+;; TODO: Create wallace file parsing utility @tools=bash,zsh
+;; TODO: Build wallace status reporting system @tools=bash,zsh
+;; TODO: Develop AI interaction management tool @tools=bash,zsh
+;; TODO: Design cost tracking utility @tools=bash,zsh
+
+;; IDEA: Wallace specification needs hierarchical task support
+;; IDEA: Consider adding SUBTASK tag or hierarchy attributes
+;; LINK: spec-doc.md#todo-syntax
+
+;; FIXME: Current specification lacks way to express task relationships
+;; LINK: spec-doc.md#tag-hierarchy
+
+;;; SECTION: risks @0.0.1
+;; REVIEW: Performance implications of shell scripts
+;; REVIEW: Cost management for AI interactions
+;; REVIEW: State management complexity
+;; REVIEW: Migration path to C implementation
+
+;; IDEA: Create benchmarking system early
+;; IDEA: Implement dry-run mode for cost estimation
+;; IDEA: Design modular system for easy C migration
