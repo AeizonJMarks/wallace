@@ -1,0 +1,37 @@
+(* Wallace Language EBNF v0.1.0 *)
+
+wallaceFile = metaBlock, tagsBlock?, synopsisBlock?, content;
+
+(* Core Blocks *)
+metaBlock = metaTag+;
+tagsBlock = "#### TAGS:" , tagList;
+synopsisBlock = synopsisTag+;
+
+(* Tag Definitions *)
+metaTag = "#### META:" , key , ":" , value , EOL;
+synopsisTag = "#### SYNOPSIS:" , text , EOL;
+sectionTag = "### SECTION:" , identifier , ["@" version] , EOL;
+endTag = "### END:" , identifier , EOL;
+
+(* Basic Elements *)
+identifier = letter , (letter | digit | "-" | "_")*;
+version = digit+ , ["." digit+] , ["." digit+] , ["@" status] , ["#" hash];
+status = "alpha" | "beta" | "rc" | "stable";
+hash = hexdigit{40};
+
+(* Numbers and Links *)
+number = currency? , digits , ["." digits] , unit?;
+currency = "$" | "£" | "€" | "USD" | "GBP" | "EUR";
+unit = "%" | "mins" | "hrs" | "days" | letter+;
+
+link = path , [":" lineNum] , ["#" section];
+path = unixPath | uri;
+unixPath = ["./"|"../"|"/"] , (identifier , "/"?)* , identifier;
+
+(* Core Tags *)
+coreTag = todoTag | fixmeTag | doneTag | ideaTag | 
+         reviewTag | functionTag | sectionTag | endTag;
+
+(* Whitespace *)
+EOL = "\n";
+whitespace = " " | "\t";

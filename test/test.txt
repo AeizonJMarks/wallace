@@ -1,0 +1,13 @@
+META: This tag starts at beginning
+ META: This tag has a leading space
+SYNOPSIS: Another start-of-line tag
+ SYNOPSIS: Another space-led tag
+
+Invalid cases to test:
+meta: lowercase (should not match)
+META:missing space (should not match)
+ meta: lowercase with space (should not match)
+
+SECTION: test_section
+Some content here
+END: section
