@@ -1,0 +1,180 @@
+META: Title: Wallace Language Support Configuration
+META: Version: 0.1.0
+META: Author: Claude + Human
+META: Path: ~/wallace/config/languages.wal
+
+SYNOPSIS: Comprehensive mapping of file extensions to comment syntax.
+SYNOPSIS: Used for Wallace tag processing across different languages.
+SYNOPSIS: Includes all major programming and documentation formats.
+
+NOTE: Language Family: Lisp.
+LANG: .el
+COMMENT: single ;
+COMMENT: prefix ;;;;
+COMMENT: continue ;;;;
+
+LANG: .lisp
+COMMENT: single ;
+COMMENT: prefix ;;;;
+COMMENT: continue ;;;;
+
+LANG: .cl
+COMMENT: single ;
+COMMENT: prefix ;;;;
+COMMENT: continue ;;;;
+
+NOTE: Language Family: Python.
+LANG: .py
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+LANG: .pyx
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+NOTE: Language Family: Shell/Scripts.
+LANG: .sh
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+LANG: .bash
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+LANG: .zsh
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+NOTE: Language Family: C/C++.
+LANG: .c
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .h
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .cpp
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .hpp
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+NOTE: Language Family: Web Languages.
+LANG: .js
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .jsx
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .ts
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .tsx
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .css
+COMMENT: single /*
+COMMENT: prefix /*****
+COMMENT: continue *****
+
+LANG: .scss
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+NOTE: Language Family: Ruby.
+LANG: .rb
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+LANG: .rake
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+NOTE: Language Family: Java.
+LANG: .java
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .scala
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+LANG: .kt
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+NOTE: Language Family: Go.
+LANG: .go
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+NOTE: Language Family: Rust.
+LANG: .rs
+COMMENT: single //
+COMMENT: prefix ////
+COMMENT: continue ////
+
+NOTE: Language Family: Documentation.
+LANG: .txt
+COMMENT: single 
+COMMENT: prefix 
+COMMENT: continue 
+
+LANG: .md
+COMMENT: single 
+COMMENT: prefix 
+COMMENT: continue 
+
+LANG: .org
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+NOTE: Language Family: Build Systems.
+LANG: .mk
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+LANG: .cmake
+COMMENT: single #
+COMMENT: prefix ####
+COMMENT: continue ####
+
+NOTE: Each language entry specifies:
+NOTE: - File extension (LANG:)
+NOTE: - Single-line comment marker (COMMENT: single)
+NOTE: - Wallace tag prefix (COMMENT: prefix)
+NOTE: - Multi-line continuation prefix (COMMENT: continue)
+
+NOTE: Special cases:
+NOTE: - .txt and .md files have no comment syntax
+NOTE: - Some languages support multiple comment styles
+NOTE: - Comment markers always include trailing space
