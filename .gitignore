@@ -1,0 +1,29 @@
+#### META: PATH: .gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution/packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+wallace-env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor/IDE specific
+.vscode/
+.idea/
+*.swp
+*~
+
+# Mac specific
+.DS_Store
