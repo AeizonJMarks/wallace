@@ -1,0 +1,6 @@
+#### META: PATH: tests/test_files/txt/valid.txt
+META: Title: Valid Text Test
+META: Author: Test Suite
+SYNOPSIS: Test file for text parsing.
+
+Some regular content.

@@ -1,0 +1,11 @@
+README.md
+setup.py
+src/wallace/__init__.py
+src/wallace/core.py
+src/wallace/parser.py
+src/wallace.egg-info/PKG-INFO
+src/wallace.egg-info/SOURCES.txt
+src/wallace.egg-info/dependency_links.txt
+src/wallace.egg-info/top_level.txt
+tests/test.py
+tests/test_core.py

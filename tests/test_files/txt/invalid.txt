@@ -1,0 +1,4 @@
+#### META: PATH: tests/test_files/txt/invalid.txt
+META:Missing space
+meta: Lowercase
+META: Missing terminator
