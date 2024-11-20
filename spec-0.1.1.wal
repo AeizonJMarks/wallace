@@ -1,0 +1,125 @@
+#### META: Title: Wallace Language EBNF Specification
+#### META: Version: 0.1.1
+#### META: Author: Claude + Human
+#### META: PATH: wallace-spec-0.1.1-ebnf.txt
+
+#### SYNOPSIS: Formal EBNF specification for Wallace 0.1.1. Defines complete
+#### SYNOPSIS: grammar including new block delimiter rules and SECTION/NOITCES
+#### SYNOPSIS: symmetry. Notable updates include header organization, blank line
+#### SYNOPSIS: delimiters, and file structure requirements. Grammar supports both
+#### SYNOPSIS: .wal files and language-specific implementations.
+
+#### CONTENTS:
+### SECTION: core-grammar
+(* Wallace Language EBNF v0.1.1 *)
+
+wallaceFile = headerBlock, contentsBlock;
+
+headerBlock = metaBlock, newline,
+             synopsisBlock, newline,
+             contentsTag;
+
+metaBlock = metaTag+;
+metaTag = "#### META:", whitespace, key, ":", whitespace, value, newline;
+
+synopsisBlock = synopsisTag+;
+synopsisTag = "#### SYNOPSIS:", whitespace, text, newline;
+
+contentsTag = "#### CONTENTS:", newline;
+### NOITCES: core-grammar
+
+### SECTION: section-grammar
+sectionBlock = sectionStart, content, sectionEnd;
+sectionStart = "### SECTION:", whitespace, identifier, newline;
+sectionEnd = "### NOITCES:", whitespace, identifier, newline;
+
+(* Must match corresponding SECTION identifier *)
+identifier = letter, {letter | digit | "-" | "_"}*;
+### NOITCES: section-grammar
+
+### SECTION: formats
+(* Basic elements *)
+letter = "A" | "B" | "C" | ... | "Z" | "a" | "b" | "c" | ... | "z";
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+whitespace = " "+;
+newline = "\n";
+
+(* Content types *)
+text = character+;
+key = uppercase+;
+value = character+;
+uppercase = "A" | "B" | "C" | ... | "Z";
+### NOITCES: formats
+
+Now, let me create a .wal file documenting the specification:
+
+#### META: Title: Wallace Language Specification
+#### META: Version: 0.1.1
+#### META: Author: Claude + Human
+#### META: PATH: wallace-spec-0.1.1.wal
+
+#### SYNOPSIS: Complete specification for Wallace 0.1.1 defining core language
+#### SYNOPSIS: structure and syntax. Key changes include formalized block
+#### SYNOPSIS: delimiters, SECTION/NOITCES pairing, and strict header format.
+#### SYNOPSIS: Maintains backwards compatibility while adding clearer structure.
+
+#### CONTENTS:
+### SECTION: file-structure
+File format requirements:
+1. Headers (all require blank line delimiter):
+   - META block
+   - SYNOPSIS block
+   - CONTENTS tag
+2. Content body:
+   - Contained within CONTENTS
+   - Consists of SECTION blocks
+   - Terminated by EOF
+### NOITCES: file-structure
+
+### SECTION: section-rules
+SECTION block requirements:
+1. Must start with ### SECTION: identifier
+2. Must end with ### NOITCES: identifier
+3. Identifiers must match exactly
+4. Can contain any valid content
+5. May be nested (with proper delimiting)
+### NOITCES: section-rules
+
+### SECTION: header-rules
+Header formatting requirements:
+1. META:
+   - Must be first block
+   - Multiple entries allowed
+   - #### prefix required
+2. SYNOPSIS:
+   - Must follow META
+   - Multiple entries allowed
+   - #### prefix required
+3. CONTENTS:
+   - Single tag defines body start
+   - #### prefix required
+### NOITCES: header-rules
+
+### SECTION: delimiters
+Delimiter rules:
+1. Blank lines:
+   - Required between header blocks
+   - Optional between sections
+2. Whitespace:
+   - Required after tag colons
+   - Leading whitespace preserved
+3. EOF:
+   - Implicitly terminates CONTENTS
+### NOITCES: delimiters
+
+### SECTION: reserved
+Reserved for future use:
+1. TAG: tag for extensions
+2. END: tag for future block handling
+### NOITCES: reserved
+
+Would you like me to:
+1. Expand any section of either file?
+2. Add more specific examples?
+3. Detail any particular rules further?
+4. Add validation requirements?

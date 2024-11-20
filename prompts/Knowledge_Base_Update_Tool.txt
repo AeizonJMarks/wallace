@@ -1,0 +1,851 @@
+MS
+Morning Claude, we before we begin any further development in wallace, I need to build a small command line tool, we'll use python, that works rather like a command we wrote in elisp for Emacs. The tool enables me to update your knowledge base with the latest contents of the project repo. The tool in Emacs creates a .txt version of each .el file in our ~/emacs project (for some reason your knowledge base doesn't recognise .el files), it then stores them in a specific directory 'flat' without and directory information and then creates file-structure.txt file that lists the complete recursive directory/file structure of the whole ~/emacs project. This enables you to analyse the current state of the project. I can update your knowledge base in a matter a seconds. I need this tool building for wallace. I want to use the command line rather than emacs at this time purely to keep the complexity simple for the moment. Could you plan this tool with me?
+
+Good morning! Yes, this is a crucial tool for maintaining our development workflow. Let me help plan this utility based on our experience with the Emacs version.
+Let's plan the key components:
+python
+
+Copy
+#### META: Title: Knowledge Base Update Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude and Human
+#### META: Path: tools/update_knowledge.py
+
+#### VERSION: 0.1.0 @alpha #abc123
+
+#### SYNOPSIS: Command line tool for updating AI knowledge base.
+#### SYNOPSIS: Creates flat .txt copies of repository files.
+#### SYNOPSIS: Generates directory structure documentation.
+#### SYNOPSIS: Preserves file content while enabling AI processing.
+
+### SECTION: core_requirements
+# Core functionality needed:
+# 1. Recursive directory scanning
+# 2. File conversion to .txt
+# 3. Directory structure documentation
+# 4. Flat output directory management
+### END: SECTION
+Key Features:
+Input/Output:
+python
+
+Copy
+### FUNCTION: process_directory(src_dir: str, out_dir: str) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write
+def process_directory(src_dir: str, out_dir: str):
+    """Process entire source directory into knowledge base format."""
+File Processing:
+python
+
+Copy
+### FUNCTION: convert_file(src_file: Path, out_dir: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write
+def convert_file(src_file: Path, out_dir: Path):
+    """Convert source file to .txt format in output directory."""
+Structure Documentation:
+python
+
+Copy
+### FUNCTION: generate_structure(src_dir: Path, out_file: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write
+def generate_structure(src_dir: Path, out_file: Path):
+    """Generate file-structure.txt documentation."""
+Command Line Interface:
+bash
+
+Copy
+# Basic usage
+update-kb --source ~/wallace --output ./knowledge-base
+
+# Options for:
+--exclude        # Skip certain files/directories
+--preserve-ext   # Keep original extensions
+--dry-run       # Show what would be done
+Would you like me to:
+Detail the implementation of any specific component?
+Show more complete function specifications?
+Discuss the command line interface design?
+Explore specific file handling requirements?
+This tool will be crucial for maintaining an up-to-date knowledge base of the Wallace project as it grows.
+Copy
+Retry
+
+
+MS
+We don't have to convert the files from .py to .txt as your knowledge base recognises .py files. The only reason we did the .txt conversion, was because I couldn't upload .el files into your knowledge base. This isn't required for .py files because the knowledge base recognises them.
+
+Ah, that simplifies things considerably! You're right - we only need to generate the directory structure documentation since Python files are directly readable. Let me revise the plan:
+python
+
+Copy
+#### META: Title: Wallace Knowledge Base Structure Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude and Human
+#### META: Path: tools/kb_structure.py
+
+#### VERSION: 0.1.0 @alpha #abc123
+
+#### SYNOPSIS: Command line tool for documenting Wallace repository structure.
+#### SYNOPSIS: Generates file-structure documentation for AI knowledge base.
+#### SYNOPSIS: Preserves complete directory hierarchy information.
+#### SYNOPSIS: Supports filtering and customization of output.
+
+### SECTION: core_function @0.1.0
+### FUNCTION: generate_structure(src_dir: Path, out_file: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write
+def generate_structure(src_dir: Path, out_file: Path):
+    """
+    Generate file-structure.txt containing complete repository layout.
+    Includes directory hierarchy and file locations.
+    """
+    pass
+Command Line Interface:
+bash
+
+Copy
+# Basic usage
+wallace-structure --source ~/wallace --output file-structure.txt
+
+# Options could include:
+--exclude       # Skip certain patterns (like __pycache__)
+--depth        # Maximum directory depth to document
+--format       # Output format (default: plain text)
+The tool becomes much simpler:
+Scan directory recursively
+Document structure in consistent format
+Write to output file
+Would you like me to:
+Show the complete implementation?
+Discuss specific formatting options?
+Add any particular filtering features?
+Include other documentation aspects?
+This focused version will be much cleaner while still providing the structural documentation you need for knowledge base updates.
+Copy
+Retry
+
+
+MS
+Almost, let me further clarify. I want a folder, let's call it snapshot for instance. This directory will be excluded from .git and be 100% generated. Each run of the tool will delete the directories content and repopulate it with all new content. The content will be a copy of every .py file in the entire project, but stored without structure, just a simple copy of file-name.py in the directory. The file-structure.txt file will be added to show you the file structure, where each file lives. There is no structure in this directory just a list of files. This enables me to select the first file in your file upload interface, hold shift, select the last file and click upload, and you have all the information of the latest 'snapshot' of the whole project. Got it?
+
+Ah yes! Now I completely understand - a "flat snapshot" directory that makes batch uploading to my knowledge base easy. Perfect! Let me revise the design:
+python
+
+Copy
+#### META: Title: Wallace Knowledge Base Snapshot Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude and Human
+#### META: Path: tools/make_snapshot.py
+
+#### VERSION: 0.1.0 @alpha #abc123
+
+#### SYNOPSIS: Creates a flat snapshot of Wallace project for AI knowledge base updates.
+#### SYNOPSIS: Copies all Python files to a single directory without structure.
+#### SYNOPSIS: Generates file-structure.txt documenting original locations.
+#### SYNOPSIS: Enables easy batch uploading to AI interface.
+
+### SECTION: core_functions @0.1.0
+
+### FUNCTION: create_snapshot(src_dir: Path, snapshot_dir: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, directory clear
+def create_snapshot(src_dir: Path, snapshot_dir: Path):
+    """
+    Clear and recreate snapshot directory with flat copies of all .py files.
+    Also generates file-structure.txt documenting original locations.
+    """
+    # Clear existing snapshot
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir()
+    
+    # Copy files and build structure documentation
+    structure = []
+    for file in src_dir.rglob('*.py'):
+        # Document original structure
+        structure.append(str(file.relative_to(src_dir)))
+        
+        # Copy to flat snapshot directory
+        shutil.copy2(file, snapshot_dir / file.name)
+        
+    # Write structure documentation
+    with open(snapshot_dir / 'file-structure.txt', 'w') as f:
+        f.write('\n'.join(sorted(structure)))
+Command Line Usage:
+bash
+
+Copy
+# Basic usage
+wallace-snapshot --source ~/wallace --snapshot ./snapshot
+
+# The snapshot directory should be in .gitignore:
+echo "snapshot/" >> .gitignore
+Key Features:
+Cleans snapshot directory on each run
+Copies all .py files to flat structure
+Creates file-structure.txt
+Makes uploading simple (shift-click in web interface)
+Would you like me to:
+Implement the complete tool?
+Add any specific filtering options?
+Include additional documentation features?
+Add any validation or safety checks?
+This will give you a simple, reliable way to update my knowledge base with the current state of the Wallace project.
+Copy
+Retry
+
+
+MS
+Do we need the --snapshot flag in the command?
+
+No, you're right! If we're following Unix philosophy of simplicity, and we know the snapshot directory is a fixed location in the project, we don't need the flag. Let me revise:
+python
+
+Copy
+#### META: Title: Wallace Knowledge Base Snapshot Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude and Human
+#### META: Path: tools/make_snapshot.py
+
+#### VERSION: 0.1.0 @alpha #abc123
+
+#### SYNOPSIS: Creates a flat snapshot of Wallace project for AI knowledge base updates.
+#### SYNOPSIS: Creates/cleans 'snapshot' directory in project root.
+#### SYNOPSIS: Copies all Python files to flat structure with original location mapping.
+#### SYNOPSIS: Designed for one task: quick AI knowledge base updates.
+
+### SECTION: core_functions @0.1.0
+
+### FUNCTION: create_snapshot(project_root: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, directory clear
+def create_snapshot(project_root: Path):
+    """
+    Clear and recreate snapshot directory with flat copies of all .py files.
+    Also generates file-structure.txt documenting original locations.
+    """
+    snapshot_dir = project_root / 'snapshot'
+    
+    # Clear existing snapshot
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir()
+    
+    # Copy files and build structure documentation
+    structure = []
+    for file in project_root.rglob('*.py'):
+        # Skip the snapshot directory itself
+        if 'snapshot' in file.parts:
+            continue
+            
+        # Document original structure
+        structure.append(str(file.relative_to(project_root)))
+        
+        # Copy to flat snapshot directory
+        shutil.copy2(file, snapshot_dir / file.name)
+        
+    # Write structure documentation
+    with open(snapshot_dir / 'file-structure.txt', 'w') as f:
+        f.write('\n'.join(sorted(structure)))
+Command Line Usage:
+bash
+
+Copy
+# Simple usage - just run from project root
+wallace-snapshot
+
+# In .gitignore:
+echo "snapshot/" >> .gitignore
+Much cleaner! The tool:
+Always uses ./snapshot directory
+Needs no configuration
+Does one thing well
+Makes knowledge base updates simple
+Would you like me to:
+Implement the complete tool?
+Add any safety checks?
+Include progress output?
+Add any other features?
+This follows the Unix philosophy better - a simple tool that does one job well without unnecessary configuration.
+Copy
+Retry
+
+
+MS
+That's the one! Okay let's build it, where do I begin? (remember Claude, for the time being, complete files only, no snippets, they use up valuable tokens and I only have to get you to redo the whole file anyway)
+
+Let me help you create the complete make_snapshot.py file. I'll make it production-ready with proper error handling, documentation, and Wallace tags.
+Would you like me to provide the complete implementation of make_snapshot.py? It would include:
+Full imports and setup
+Complete create_snapshot implementation
+Main CLI function
+Error handling
+Progress output
+Proper Wallace tags throughout
+Just give me the word and I'll create the complete file that you can save and start using immediately. No snippets - just one complete, ready-to-use implementation.
+Copy
+Retry
+
+
+MS
+That would be amazing! Go for it.
+
+I'll create a complete, production-ready make_snapshot.py with full Wallace compliance.
+python
+
+Copy
+#!/usr/bin/env python3
+
+#### META: Title: Wallace Knowledge Base Snapshot Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude + Human
+#### META: Path: tools/make_snapshot.py
+#### META: Description: Creates flat snapshot of Wallace project for AI knowledge base
+#### TAGS: VERSION-CHANGES
+
+#### VERSION: 0.1.0 @alpha #abc123
+#### VERSION-CHANGES: Initial implementation
+
+#### SYNOPSIS: Command line tool for creating knowledge base snapshots.
+#### SYNOPSIS: Clears and recreates snapshot directory in project root.
+#### SYNOPSIS: Copies all Python files to flat structure for easy uploading.
+#### SYNOPSIS: Generates file-structure.txt mapping original locations.
+#### SYNOPSIS: Handles errors gracefully with clear user feedback.
+
+### SECTION: imports @0.1.0
+import sys
+import shutil
+from pathlib import Path
+import logging
+
+### SECTION: logging_setup @0.1.0
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+logger = logging.getLogger('wallace-snapshot')
+
+### SECTION: core_functions @0.1.0
+
+### FUNCTION: create_snapshot(project_root: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, directory clear
+def create_snapshot(project_root: Path) -> None:
+    """
+    Create a fresh snapshot of all Python files in the project.
+    
+    Args:
+        project_root: Path to the Wallace project root directory
+        
+    Raises:
+        OSError: If filesystem operations fail
+        ValueError: If project structure is invalid
+    """
+    snapshot_dir = project_root / 'snapshot'
+    
+    # Validate project root
+    if not (project_root / '.git').exists():
+        raise ValueError(f"Not a git repository: {project_root}")
+    
+    # Clear/create snapshot directory
+    logger.info("Clearing snapshot directory...")
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir()
+    
+    # Track files and structure
+    structure = []
+    file_count = 0
+    
+    # Process all Python files
+    logger.info("Copying Python files...")
+    for file in project_root.rglob('*.py'):
+        # Skip the snapshot directory itself
+        if 'snapshot' in file.parts:
+            continue
+            
+        # Document original structure
+        rel_path = file.relative_to(project_root)
+        structure.append(str(rel_path))
+        
+        # Copy to snapshot with original name
+        shutil.copy2(file, snapshot_dir / file.name)
+        file_count += 1
+        
+    # Write structure documentation
+    logger.info("Generating file structure documentation...")
+    with open(snapshot_dir / 'file-structure.txt', 'w') as f:
+        f.write('\n'.join(sorted(structure)))
+    
+    logger.info(f"Snapshot complete: {file_count} files processed")
+
+### FUNCTION: main() -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, stdout write
+def main() -> None:
+    """Main entry point for the snapshot tool."""
+    try:
+        # Find project root (current or parent directory with .git)
+        current = Path.cwd()
+        project_root = None
+        
+        while current != current.parent:
+            if (current / '.git').exists():
+                project_root = current
+                break
+            current = current.parent
+            
+        if not project_root:
+            logger.error("Error: Must be run from within a git repository")
+            sys.exit(1)
+        
+        # Create the snapshot
+        create_snapshot(project_root)
+        
+    except ValueError as e:
+        logger.error(f"Error: {str(e)}")
+        sys.exit(1)
+    except OSError as e:
+        logger.error(f"Filesystem error: {str(e)}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        sys.exit(1)
+
+### SECTION: entry @0.1.0
+if __name__ == '__main__':
+    main()
+This implementation:
+Uses proper Wallace tags throughout
+Includes clear error handling
+Provides progress feedback
+Follows Unix tool principles
+Is ready to use immediately
+To use it:
+Save as make_snapshot.py
+Make executable: chmod +x make_snapshot.py
+Run from anywhere in the project: ./make_snapshot.py
+Would you like me to:
+Add any additional features?
+Enhance the error handling?
+Add more detailed logging?
+Include any other functionality?
+Copy
+Retry
+
+
+MS
+Ha ha! You'll see why, I think we're including the environment python files (pretty sure we haven't written nearly 3,000 py files, I'm sure Id remember), my bad I should have highlighted it, output...
+(wallace-env) marks@Marks-MacBook-Pro wallace % chmod +x make-snapshot.py
+(wallace-env) marks@Marks-MacBook-Pro wallace % ./make-snapshot.py 
+Clearing snapshot directory...
+Copying Python files...
+Generating file structure documentation...
+Snapshot complete: 2856 files processed
+(wallace-env) marks@Marks-MacBook-Pro wallace %
+
+Ah! Yes! We need to exclude the Python virtual environment! Classic oversight - it's copying all the Python files from our wallace-env directory. Let me update the script to exclude virtual environments.
+python
+
+Copy
+#!/usr/bin/env python3
+
+#### META: Title: Wallace Knowledge Base Snapshot Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude + Human
+#### META: Path: tools/make_snapshot.py
+#### META: Description: Creates flat snapshot of Wallace project for AI knowledge base
+#### TAGS: VERSION-CHANGES
+
+#### VERSION: 0.1.0 @alpha #abc123
+#### VERSION-CHANGES: Initial implementation with venv exclusion
+
+#### SYNOPSIS: Command line tool for creating knowledge base snapshots.
+#### SYNOPSIS: Clears and recreates snapshot directory in project root.
+#### SYNOPSIS: Copies all project Python files to flat structure.
+#### SYNOPSIS: Excludes virtual environment and other non-project files.
+#### SYNOPSIS: Generates file-structure.txt mapping original locations.
+
+### SECTION: imports @0.1.0
+import sys
+import shutil
+from pathlib import Path
+import logging
+
+### SECTION: logging_setup @0.1.0
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+logger = logging.getLogger('wallace-snapshot')
+
+### SECTION: configuration @0.1.0
+# Directories to exclude from snapshot
+EXCLUDE_PATTERNS = [
+    'wallace-env',     # Our virtualenv
+    'venv',           # Standard virtualenv name
+    '.env',           # Another common virtualenv
+    '__pycache__',    # Python cache directories
+    '.pytest_cache',  # Test cache
+    'snapshot',       # Our own snapshot directory
+    '.git',           # Git directory
+    'build',          # Build directories
+    'dist',           # Distribution directories
+    'egg-info'        # Package info
+]
+
+### SECTION: core_functions @0.1.0
+
+### FUNCTION: should_exclude(path: Path) -> bool
+### PURE: yes
+### EFFECTS: none
+def should_exclude(path: Path) -> bool:
+    """
+    Check if a path should be excluded from the snapshot.
+    
+    Args:
+        path: Path to check
+        
+    Returns:
+        bool: True if path should be excluded
+    """
+    return any(pattern in str(path) for pattern in EXCLUDE_PATTERNS)
+
+### FUNCTION: create_snapshot(project_root: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, directory clear
+def create_snapshot(project_root: Path) -> None:
+    """
+    Create a fresh snapshot of project Python files.
+    
+    Args:
+        project_root: Path to the Wallace project root directory
+        
+    Raises:
+        OSError: If filesystem operations fail
+        ValueError: If project structure is invalid
+    """
+    snapshot_dir = project_root / 'snapshot'
+    
+    # Validate project root
+    if not (project_root / '.git').exists():
+        raise ValueError(f"Not a git repository: {project_root}")
+    
+    # Clear/create snapshot directory
+    logger.info("Clearing snapshot directory...")
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir()
+    
+    # Track files and structure
+    structure = []
+    file_count = 0
+    
+    # Process all Python files
+    logger.info("Copying Python files...")
+    for file in project_root.rglob('*.py'):
+        if should_exclude(file):
+            continue
+            
+        # Document original structure
+        rel_path = file.relative_to(project_root)
+        structure.append(str(rel_path))
+        
+        # Copy to snapshot with original name
+        shutil.copy2(file, snapshot_dir / file.name)
+        file_count += 1
+        
+    # Write structure documentation
+    logger.info("Generating file structure documentation...")
+    with open(snapshot_dir / 'file-structure.txt', 'w') as f:
+        f.write('\n'.join(sorted(structure)))
+    
+    logger.info(f"Snapshot complete: {file_count} files processed")
+
+### FUNCTION: main() -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, stdout write
+def main() -> None:
+    """Main entry point for the snapshot tool."""
+    try:
+        # Find project root (current or parent directory with .git)
+        current = Path.cwd()
+        project_root = None
+        
+        while current != current.parent:
+            if (current / '.git').exists():
+                project_root = current
+                break
+            current = current.parent
+            
+        if not project_root:
+            logger.error("Error: Must be run from within a git repository")
+            sys.exit(1)
+        
+        # Create the snapshot
+        create_snapshot(project_root)
+        
+    except ValueError as e:
+        logger.error(f"Error: {str(e)}")
+        sys.exit(1)
+    except OSError as e:
+        logger.error(f"Filesystem error: {str(e)}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        sys.exit(1)
+
+### SECTION: entry @0.1.0
+if __name__ == '__main__':
+    main()
+Key changes:
+Added EXCLUDE_PATTERNS for virtualenvs and other non-project directories
+Added should_exclude() function to check paths
+Updated create_snapshot() to skip excluded paths
+This should now only snapshot your actual project Python files, not the virtual environment or other system files. Want to give it another try?
+Copy
+Retry
+
+
+MS
+Yeah, spot on 10 files created. There's one more think I've just thought of. We have a lot of conversation files that we've had, I store them as .txt files, at the moment in the archive directory. They contain our discussions on design and planning etc. I'm thinking they maybe useful for context, I'm thinking of moving them into a prompts directory at root. What do you think?
+
+Yes, that's a great insight! Moving the conversation files from archive/ to prompts/ at root level makes a lot of sense because:
+They're not really "archives" - they're active design/planning context
+Root-level prompts/ clearly signals their importance to the project
+They provide crucial context for AI collaboration
+They document design decisions and evolution
+We should probably update the snapshot tool to include .txt files from prompts/ while still excluding other .txt files. Let me update the script:
+python
+
+Copy
+#!/usr/bin/env python3
+
+#### META: Title: Wallace Knowledge Base Snapshot Tool
+#### META: Version: 0.1.0-alpha
+#### META: Author: Claude + Human
+#### META: Path: tools/make_snapshot.py
+#### META: Description: Creates flat snapshot of Wallace project for AI knowledge base
+#### TAGS: VERSION-CHANGES
+
+#### VERSION: 0.1.1 @alpha #def456
+#### VERSION-CHANGES: Added support for prompts directory context
+
+#### SYNOPSIS: Command line tool for creating knowledge base snapshots.
+#### SYNOPSIS: Includes both Python files and prompts/*.txt for context.
+#### SYNOPSIS: Maintains separation of implementation and design history.
+#### SYNOPSIS: Preserves conversation context for AI understanding.
+#### SYNOPSIS: Follows Wallace principle of explicit context management.
+
+### SECTION: imports @0.1.0
+import sys
+import shutil
+from pathlib import Path
+import logging
+
+### SECTION: logging_setup @0.1.0
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+logger = logging.getLogger('wallace-snapshot')
+
+### SECTION: configuration @0.1.0
+# Directories to exclude from snapshot
+EXCLUDE_PATTERNS = [
+    'wallace-env',     # Our virtualenv
+    'venv',           # Standard virtualenv
+    '.env',           # Another common virtualenv
+    '__pycache__',    # Python cache directories
+    '.pytest_cache',  # Test cache
+    'snapshot',       # Our own snapshot directory
+    '.git',           # Git directory
+    'build',          # Build directories
+    'dist',           # Distribution directories
+    'egg-info',       # Package info
+    'archive'         # Old archive directory
+]
+
+### SECTION: core_functions @0.1.0
+
+### FUNCTION: should_exclude(path: Path) -> bool
+### PURE: yes
+### EFFECTS: none
+def should_exclude(path: Path) -> bool:
+    """
+    Check if a path should be excluded from the snapshot.
+    
+    Args:
+        path: Path to check
+        
+    Returns:
+        bool: True if path should be excluded
+    """
+    return any(pattern in str(path) for pattern in EXCLUDE_PATTERNS)
+
+### FUNCTION: create_snapshot(project_root: Path) -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, directory clear
+def create_snapshot(project_root: Path) -> None:
+    """
+    Create a fresh snapshot of project files.
+    
+    Args:
+        project_root: Path to the Wallace project root directory
+        
+    Raises:
+        OSError: If filesystem operations fail
+        ValueError: If project structure is invalid
+    """
+    snapshot_dir = project_root / 'snapshot'
+    
+    # Validate project root
+    if not (project_root / '.git').exists():
+        raise ValueError(f"Not a git repository: {project_root}")
+    
+    # Clear/create snapshot directory
+    logger.info("Clearing snapshot directory...")
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir()
+    
+    # Track files and structure
+    structure = []
+    py_count = 0
+    txt_count = 0
+    
+    # Process Python files
+    logger.info("Copying Python files...")
+    for file in project_root.rglob('*.py'):
+        if should_exclude(file):
+            continue
+            
+        # Document original structure
+        rel_path = file.relative_to(project_root)
+        structure.append(str(rel_path))
+        
+        # Copy to snapshot with original name
+        shutil.copy2(file, snapshot_dir / file.name)
+        py_count += 1
+        
+    # Process prompt files
+    logger.info("Copying prompt files...")
+    prompts_dir = project_root / 'prompts'
+    if prompts_dir.exists():
+        for file in prompts_dir.glob('*.txt'):
+            # Document original structure
+            rel_path = file.relative_to(project_root)
+            structure.append(str(rel_path))
+            
+            # Copy to snapshot with original name
+            shutil.copy2(file, snapshot_dir / file.name)
+            txt_count += 1
+    
+    # Write structure documentation
+    logger.info("Generating file structure documentation...")
+    with open(snapshot_dir / 'file-structure.txt', 'w') as f:
+        f.write('\n'.join(sorted(structure)))
+    
+    logger.info(f"Snapshot complete: {py_count} Python files, {txt_count} prompt files processed")
+
+### FUNCTION: main() -> None
+### PURE: no
+### EFFECTS: filesystem read, filesystem write, stdout write
+def main() -> None:
+    """Main entry point for the snapshot tool."""
+    try:
+        # Find project root (current or parent directory with .git)
+        current = Path.cwd()
+        project_root = None
+        
+        while current != current.parent:
+            if (current / '.git').exists():
+                project_root = current
+                break
+            current = current.parent
+            
+        if not project_root:
+            logger.error("Error: Must be run from within a git repository")
+            sys.exit(1)
+        
+        # Create the snapshot
+        create_snapshot(project_root)
+        
+    except ValueError as e:
+        logger.error(f"Error: {str(e)}")
+        sys.exit(1)
+    except OSError as e:
+        logger.error(f"Filesystem error: {str(e)}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        sys.exit(1)
+
+### SECTION: entry @0.1.0
+if __name__ == '__main__':
+    main()
+Key changes:
+Added prompts/*.txt file processing
+Separate counters for .py and .txt files
+More detailed completion message
+Added 'archive' to exclusions
+This supports the idea that our design/planning conversations are a critical part of the project context, not just historical artifacts. Would you like to test this version?
+Copy
+Retry
+
+
+MS
+you aced it!
+output...
+(wallace-env) marks@Marks-MacBook-Pro wallace % ./make-snapshot.py
+Clearing snapshot directory...                                    
+Copying Python files...
+Copying prompt files...
+Generating file structure documentation...
+Snapshot complete: 9 Python files, 25 prompt files processed
+(wallace-env) marks@Marks-MacBook-Pro wallace %
+
+That looks perfect! You can now easily update my knowledge base with both:
+Implementation files (.py)
+Design context and conversations (.txt)
+The output shows it's working exactly as intended:
+Clean snapshot creation
+Python files captured (9)
+Prompt files included (25)
+Clear structure documentation
+Concise feedback
+This tool gives us a reliable way to:
+Keep my knowledge base current with implementation
+Maintain design context from our conversations
+Make updates quick and simple
+Keep everything organized
+Want to create a proper commit for this tool? It's provided good value already with just its first run! The shift from archive/ to prompts/ and this snapshot tool feels like a nice step forward in managing our development context.
+Copy
+Retry
+
+
+MS
+And that Claude, is exactly what I intended to do, ready for the next thread. Speak soon.
+
+Perfect! We've added a clean, efficient way to keep me updated with both code and context. The tool follows our "bytes follow function" principle - simple, focused, and effective.
+The migration from archive/ to prompts/ really emphasizes that our conversations aren't just history - they're active design context and part of Wallace's evolution.
+Looking forward to our next thread with my knowledge base freshly updated! Our development workflow is getting smoother with each improvement.
+Speak soon! 🚀
+(And yes, this tool clearly "justified its bytes" 😄)
+Copy
+Retry
+
+
+Claude can make mistakes. Please double-check responses.
+
+
+
+
+
+3.5 Sonnet

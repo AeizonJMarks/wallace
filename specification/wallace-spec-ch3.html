@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallace Language Specification v0.1.1 - Chapter 3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <style>
+        body { max-width: 800px; margin: auto; padding: 20px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        h1, h2 { color: #333; }
+        h3 { color: #444; margin-top: 30px; }
+        h4 { color: #555; }
+    </style>
+</head>
+<body>
+    <!-- META: Title: Wallace Specification Chapter 3: Data Elements -->
+    <!-- META: Version: 0.1.1 -->
+    <!-- META: Author: Claude and Human -->
+    <!-- META: PATH: spec/chapter3.html -->
+    
+    <!-- SYNOPSIS: Defines number formats and reference systems -->
+    <!-- SYNOPSIS: Establishes rules for measurements and links -->
+    <!-- SYNOPSIS: Details data representation standards -->
+    
+    <!-- SECTION: introduction -->
+    <h1>Wallace Language Specification v0.1.1</h1>
+    <h2>Chapter 3: Data Elements</h2>
+
+    <h3>Introduction</h3>
+    <p>This chapter defines the format and rules for data elements in Wallace, including numbers, measurements, and references.</p>
+    <!-- END: SECTION: introduction -->
+
+    <!-- SECTION: number-format -->
+    <h3>Number Format</h3>
+    
+    <h4>Basic Structure</h4>
+    <p>Numbers in Wallace follow this format:</p>
+    <pre>[currency-symbol]integer[.mantissa][unit]</pre>
+    
+    <ul>
+        <li>Currency symbol optional (if used, must prefix number)</li>
+        <li>Integer portion required</li>
+        <li>Decimal point and mantissa optional (if decimal used, mantissa required)</li>
+        <li>Unit suffix optional (if used, no space before unit)</li>
+    </ul>
+
+    <h4>Currency Notation</h4>
+    <p>Supported currency symbols:</p>
+    <ul>
+        <li>$ (USD)</li>
+        <li>£ (GBP)</li>
+        <li>€ (EUR)</li>
+        <li>USD, GBP, EUR (text format)</li>
+    </ul>
+
+    <h4>Units</h4>
+    <p>Common unit suffixes:</p>
+    <ul>
+        <li>% (percentage)</li>
+        <li>hrs (hours)</li>
+        <li>mins (minutes)</li>
+        <li>days</li>
+        <li>KB, MB, GB (sizes)</li>
+        <li>Custom units allowed</li>
+    </ul>
+
+    <h4>Example Numbers:</h4>
+    <pre>
+42          # Simple integer
+$42.50      # Currency with decimal
+99.9%       # Percentage
+24hrs       # Time (no space before unit)
+£100.00     # Alternative currency
+2.5KB       # Size with unit
+365days     # Duration</pre>
+    <!-- END: SECTION: number-format -->
+
+    <!-- SECTION: reference-format -->
+    <h3>Reference Format</h3>
+    
+    <h4>Path Syntax</h4>
+    <p>Basic path format:</p>
+    <pre>path[:[line-number]][#section-id]</pre>
+
+    <h4>Components:</h4>
+    <ul>
+        <li>Basic path (required)</li>
+        <li>Line number (optional)</li>
+        <li>Section identifier (optional)</li>
+        <li>Components joined without spaces</li>
+    </ul>
+
+    <h4>Path Types:</h4>
+    <ul>
+        <li>Relative paths (./ or ../)</li>
+        <li>Absolute paths (from project root)</li>
+        <li>File patterns</li>
+        <li>Directory references</li>
+    </ul>
+
+    <h4>Example References:</h4>
+    <pre>
+src/main.py           # Simple path
+config.el:42          # Line reference
+utils.py#init         # Section reference
+core.c:100#memory    # Combined reference
+../lib/module.py     # Relative path
+/project/main.py     # Absolute path</pre>
+    <!-- END: SECTION: reference-format -->
+
+    <!-- SECTION: uri-support -->
+    <h3>URI Support</h3>
+    
+    <h4>Format</h4>
+    <p>Full URI format supported:</p>
+    <pre>scheme://authority/path[#fragment][?query]</pre>
+
+    <h4>Examples:</h4>
+    <pre>
+https://example.com/docs#section
+git://repository.git
+file:///absolute/path</pre>
+
+    <h4>Requirements:</h4>
+    <ul>
+        <li>Valid protocol required</li>
+        <li>Standard URI format</li>
+        <li>Fragment identifiers allowed</li>
+        <li>Query parameters allowed</li>
+    </ul>
+    <!-- END: SECTION: uri-support -->
+
+    <!-- SECTION: metrics -->
+    <h3>METRICS Format</h3>
+    
+    <h4>Structure</h4>
+    <ul>
+        <li>Space-delimited list of measurements</li>
+        <li>Each measurement follows number format</li>
+        <li>No commas between measurements</li>
+        <li>Order not significant</li>
+    </ul>
+
+    <h4>Example METRICS Tags:</h4>
+    <pre>
+### METRICS: 24hrs $50.00 15mins 99.9%
+### METRICS: 2.5KB 100ms 50MB
+### METRICS: $1000.00 90days 85.5%</pre>
+
+    <h4>Usage Examples:</h4>
+    <pre>
+### SECTION: performance
+### METRICS: 100ms 99.9% 50MB
+Code implementation...
+### END: SECTION: performance
+
+### TODO: Optimize database queries
+### METRICS: 2.5s 500MB
+Implementation needed...
+### DONE: 17/11/2024</pre>
+    <!-- END: SECTION: metrics -->
+
+    <!-- SECTION: validation -->
+    <h3>Validation Requirements</h3>
+    
+    <h4>Number Validation:</h4>
+    <ul>
+        <li>Valid numeric formats</li>
+        <li>Recognized currency symbols</li>
+        <li>Valid unit formats</li>
+        <li>No spaces in measurements</li>
+    </ul>
+
+    <h4>Reference Validation:</h4>
+    <ul>
+        <li>Valid path formats</li>
+        <li>Existing line numbers</li>
+        <li>Valid section identifiers</li>
+        <li>Proper URI formats</li>
+    </ul>
+
+    <h4>METRICS Validation:</h4>
+    <ul>
+        <li>Valid measurements</li>
+        <li>Proper spacing</li>
+        <li>Recognized formats</li>
+    </ul>
+    <!-- END: SECTION: validation -->
+</body>
+</html>

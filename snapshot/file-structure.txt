@@ -1,0 +1,10 @@
+archive/wallace-original.py
+setup.py
+src/wallace/__init__.py
+src/wallace/core.py
+src/wallace/parser.py
+tests/test.py
+tests/test_core.py
+tests/test_files/python/invalid.py
+tests/test_files/python/valid.py
+tests/valid.py

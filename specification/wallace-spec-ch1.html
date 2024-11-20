@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallace Language Specification v0.1.1 - Chapter 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <style>
+        body { max-width: 800px; margin: auto; padding: 20px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        h1, h2 { color: #333; }
+        h3 { color: #444; margin-top: 30px; }
+        h4 { color: #555; }
+    </style>
+</head>
+<body>
+    <!-- META: Title: Wallace Specification Chapter 1: Fundamentals -->
+    <!-- META: Version: 0.1.1 -->
+    <!-- META: Author: Claude and Human -->
+    <!-- META: PATH: spec/chapter1.html -->
+    
+    <!-- SYNOPSIS: Core foundational chapter defining basic Wallace structures -->
+    <!-- SYNOPSIS: Establishes file types, comment syntax, and basic rules -->
+    <!-- SYNOPSIS: Forms foundation for all Wallace implementations -->
+    
+    <!-- SECTION: introduction -->
+    <h1>Wallace Language Specification v0.1.1</h1>
+    <h2>Chapter 1: Fundamentals</h2>
+
+    <h3>Introduction</h3>
+    <p>Wallace is a structured comment protocol enabling human-AI collaboration in software development. It provides a standardized communication layer while maintaining language agnosticism and tool independence.</p>
+
+    <h4>Core Principles</h4>
+    <ul>
+        <li>Comments as first-class communication channel</li>
+        <li>Language agnostic design</li>
+        <li>Human readability paramount</li>
+        <li>Machine parseability essential</li>
+        <li>Minimal overhead</li>
+        <li>Progressive adoption support</li>
+    </ul>
+    <!-- END: SECTION: introduction -->
+
+    <!-- SECTION: file-types -->
+    <h3>File Types</h3>
+
+    <h4>.wal Files</h4>
+    <p>Pure Wallace files (.wal) MUST follow this exact structure:</p>
+    <ol>
+        <li>Shebang line (required)</li>
+        <li>Blank line delimiter</li>
+        <li>META block</li>
+        <li>Blank line delimiter</li>
+        <li>SYNOPSIS block</li>
+        <li>Blank line delimiter</li>
+        <li>CONTENTS section</li>
+    </ol>
+
+    <h4>Example .wal file:</h4>
+    <pre>
+#!/usr/bin/env python3
+
+#### META: Title: Example File
+#### META: Version: 1.0.0
+#### META: Author: Development Team
+
+#### SYNOPSIS: Example Wallace file
+#### SYNOPSIS: Demonstrates proper structure
+
+#### CONTENTS:
+### SECTION: example
+Content here...
+### END: SECTION: example</pre>
+
+    <h4>Source Files</h4>
+    <p>Source code files MAY include Wallace tags using their native comment syntax. Shebang lines are optional for source files.</p>
+
+    <h4>Example Python Source File:</h4>
+    <pre>
+#!/usr/bin/env python3
+# #### META: Title: Example Python File
+# #### META: Version: 1.0.0
+# #### META: Author: Team
+
+# #### SYNOPSIS: Example implementation
+# #### SYNOPSIS: Shows integration in Python
+
+# #### CONTENTS:
+# ### SECTION: example
+def example():
+    pass
+# ### END: SECTION: example</pre>
+    <!-- END: SECTION: file-types -->
+
+    <!-- SECTION: comment-syntax -->
+    <h3>Comment Syntax</h3>
+
+    <h4>Single-Line Comments</h4>
+    <table>
+        <tr>
+            <th>Language</th>
+            <th>Syntax</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>Python</td>
+            <td>#</td>
+            <td># #### META: Title</td>
+        </tr>
+        <tr>
+            <td>Lisp</td>
+            <td>;</td>
+            <td>;; #### META: Title</td>
+        </tr>
+        <tr>
+            <td>C/C++</td>
+            <td>//</td>
+            <td>// #### META: Title</td>
+        </tr>
+        <tr>
+            <td>Shell</td>
+            <td>#</td>
+            <td># #### META: Title</td>
+        </tr>
+        <tr>
+            <td>JavaScript</td>
+            <td>//</td>
+            <td>// #### META: Title</td>
+        </tr>
+    </table>
+
+    <h4>Block Comments</h4>
+    <p>Block comments MUST:</p>
+    <ul>
+        <li>Start on a new line</li>
+        <li>Contain Wallace tags on their own lines</li>
+        <li>End on a new line</li>
+    </ul>
+
+    <h4>Example Block Comments:</h4>
+    <pre>
+<!-- HTML/XML Block Comment
+#### META: Title: Example
+#### SYNOPSIS: Test file
+-->
+
+/* C-style Block Comment
+#### META: Title: Example
+#### SYNOPSIS: Test file
+*/
+
+{- Haskell Block Comment
+#### META: Title: Example
+#### SYNOPSIS: Test file
+-}</pre>
+
+    <h4>Multiple Comment Styles</h4>
+    <p>Languages with multiple comment styles (like C's // and /* */) may use either style, but must be consistent within each Wallace block.</p>
+
+    <p>Example of valid mixed usage:</p>
+    <pre>
+// #### META: Title: Example
+// #### SYNOPSIS: First block uses line comments
+
+/* #### SECTION: example
+   Contents using block style
+   #### END: SECTION: example */</pre>
+    <!-- END: SECTION: comment-syntax -->
+
+    <!-- SECTION: basic-structure -->
+    <h3>Basic Structure</h3>
+
+    <h4>Line Format</h4>
+    <p>Every Wallace tag MUST follow this format:</p>
+    <pre>&lt;comment-prefix&gt;&lt;tag-level&gt; &lt;TAG&gt;: &lt;content&gt;&lt;EOL&gt;</pre>
+
+    <p>Where:</p>
+    <ul>
+        <li><code>&lt;comment-prefix&gt;</code>: Language-specific comment symbol (empty for .wal)</li>
+        <li><code>&lt;tag-level&gt;</code>: ### for standard tags, #### for META/SYNOPSIS</li>
+        <li><code>&lt;TAG&gt;</code>: Uppercase letters only</li>
+        <li><code>:</code>: Required colon</li>
+        <li><code>&lt;content&gt;</code>: Tag content (extends to end of line)</li>
+    </ul>
+
+    <h4>Blank Line Rules</h4>
+    <ul>
+        <li>One blank line REQUIRED between header blocks</li>
+        <li>No blank line REQUIRED within blocks</li>
+        <li>Blank lines in code/content preserved</li>
+        <li>Trailing whitespace ignored</li>
+        <li>Leading whitespace preserved</li>
+    </ul>
+
+    <h4>Examples of Valid Tag Formats:</h4>
+    <pre>
+#### META: Title: Example File     # Header level tag
+### SECTION: initialization        # Standard level tag
+### TODO: Implement feature       # Task tag
+### METRICS: 24hrs $50.00         # Space-delimited metrics
+### LINK: src/main.py:42          # Reference with line number</pre>
+    <!-- END: SECTION: basic-structure -->
+
+    <!-- SECTION: tag-levels -->
+    <h3>Tag Levels</h3>
+    <p>Wallace defines two tag levels:</p>
+
+    <h4>Header Level (####)</h4>
+    <ul>
+        <li>Used for file-level metadata (META:)</li>
+        <li>Used for AI analysis (SYNOPSIS:)</li>
+        <li>Used for content marker (CONTENTS:)</li>
+        <li>One more # than standard level</li>
+    </ul>
+
+    <h4>Standard Level (###)</h4>
+    <ul>
+        <li>Used for all other tags</li>
+        <li>Used for sections and their endings</li>
+        <li>Used for tasks, links, and metrics</li>
+        <li>Most common tag level</li>
+    </ul>
+    <!-- END: SECTION: tag-levels -->
+</body>
+</html>

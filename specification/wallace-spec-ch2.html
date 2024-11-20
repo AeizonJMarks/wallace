@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallace Language Specification v0.1.1 - Chapter 2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <style>
+        body { max-width: 800px; margin: auto; padding: 20px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        h1, h2 { color: #333; }
+        h3 { color: #444; margin-top: 30px; }
+        h4 { color: #555; }
+    </style>
+</head>
+<body>
+    <!-- META: Title: Wallace Specification Chapter 2: Header Components -->
+    <!-- META: Version: 0.1.1 -->
+    <!-- META: Author: Claude and Human -->
+    <!-- META: PATH: spec/chapter2.html -->
+    
+    <!-- SYNOPSIS: Defines header structure and mandatory components -->
+    <!-- SYNOPSIS: Details shebang requirements and header blocks -->
+    <!-- SYNOPSIS: Establishes rules for META, SYNOPSIS, and CONTENTS -->
+    
+    <!-- SECTION: introduction -->
+    <h1>Wallace Language Specification v0.1.1</h1>
+    <h2>Chapter 2: Header Components</h2>
+
+    <h3>Introduction</h3>
+    <p>This chapter defines the required header components and their structure for Wallace files. Headers provide essential metadata, AI analysis, and content organization.</p>
+    <!-- END: SECTION: introduction -->
+
+    <!-- SECTION: shebang -->
+    <h3>Shebang Rules</h3>
+    
+    <h4>.wal Files</h4>
+    <p>All .wal files MUST begin with a shebang line:</p>
+    <ul>
+        <li>Current: <code>#!/usr/bin/env python3</code></li>
+        <li>Future: <code>#!/usr/bin/env wallace</code></li>
+        <li>Must be followed by blank line</li>
+        <li>Must be first line of file</li>
+    </ul>
+
+    <h4>Source Files</h4>
+    <p>Source files MAY include language-appropriate shebangs:</p>
+    <ul>
+        <li>Optional but respected if present</li>
+        <li>Must follow language conventions</li>
+        <li>Must be followed by blank line if present</li>
+    </ul>
+
+    <h4>Example Valid Headers:</h4>
+    <pre>
+#!/usr/bin/env python3
+
+#### META: Title: Example
+...
+
+#!/bin/bash
+
+# #### META: Title: Example
+...</pre>
+    <!-- END: SECTION: shebang -->
+
+    <!-- SECTION: meta-block -->
+    <h3>META Block</h3>
+    
+    <h4>Required Format</h4>
+    <ul>
+        <li>Must begin with #### META:</li>
+        <li>Each entry on separate line</li>
+        <li>Must be followed by blank line</li>
+        <li>Must include all required fields</li>
+    </ul>
+
+    <h4>Required Fields</h4>
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td>Document title/purpose</td>
+            <td>#### META: Title: Example File</td>
+        </tr>
+        <tr>
+            <td>Version</td>
+            <td>Document version</td>
+            <td>#### META: Version: 1.0.0</td>
+        </tr>
+        <tr>
+            <td>Author</td>
+            <td>Document author(s)</td>
+            <td>#### META: Author: Development Team</td>
+        </tr>
+        <tr>
+            <td>PATH</td>
+            <td>File path in project</td>
+            <td>#### META: PATH: src/example.wal</td>
+        </tr>
+    </table>
+
+    <h4>Optional Fields</h4>
+    <ul>
+        <li>Additional metadata as needed</li>
+        <li>Must follow same format</li>
+        <li>Project-specific fields allowed</li>
+    </ul>
+
+    <h4>Example Complete META Block:</h4>
+    <pre>
+#### META: Title: Example Implementation
+#### META: Version: 1.0.0
+#### META: Author: Development Team
+#### META: PATH: src/core/example.wal
+#### META: Dependencies: utils.wal
+#### META: Status: stable</pre>
+    <!-- END: SECTION: meta-block -->
+
+    <!-- SECTION: synopsis-block -->
+    <h3>SYNOPSIS Block</h3>
+    
+    <h4>Format Requirements</h4>
+    <ul>
+        <li>Must begin with #### SYNOPSIS:</li>
+        <li>Each entry on separate line</li>
+        <li>Must be followed by blank line</li>
+        <li>AI-generated content only</li>
+        <li>System-wide contextual analysis</li>
+    </ul>
+
+    <h4>Example SYNOPSIS Block:</h4>
+    <pre>
+#### SYNOPSIS: Core implementation of data processing pipeline
+#### SYNOPSIS: Handles rate limiting and error recovery
+#### SYNOPSIS: Critical path for high-volume operations
+#### SYNOPSIS: Dependencies on retry.wal and metrics.wal</pre>
+    <!-- END: SECTION: synopsis-block -->
+
+    <!-- SECTION: contents-section -->
+    <h3>CONTENTS Section</h3>
+    
+    <h4>Format Requirements</h4>
+    <ul>
+        <li>Must begin with #### CONTENTS:</li>
+        <li>Marks beginning of file content</li>
+        <li>Must follow SYNOPSIS block</li>
+        <li>Extends to end of file</li>
+        <li>Contains all SECTION blocks</li>
+    </ul>
+
+    <h4>Example Content Structure:</h4>
+    <pre>
+#### CONTENTS:
+### SECTION: initialization
+// Initialization code here
+### END: SECTION: initialization
+
+### SECTION: main-loop
+// Main processing loop
+### END: SECTION: main-loop</pre>
+    <!-- END: SECTION: contents-section -->
+
+    <!-- SECTION: complete-example -->
+    <h3>Complete Header Example</h3>
+    
+    <pre>
+#!/usr/bin/env python3
+
+#### META: Title: Data Processor
+#### META: Version: 2.1.0
+#### META: Author: Development Team
+#### META: PATH: src/processing/data.wal
+
+#### SYNOPSIS: Core data processing implementation
+#### SYNOPSIS: Handles high-volume data streams
+#### SYNOPSIS: Critical system component
+
+#### CONTENTS:
+### SECTION: implementation
+// Implementation begins here
+### END: SECTION: implementation</pre>
+    <!-- END: SECTION: complete-example -->
+</body>
+</html>

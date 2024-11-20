@@ -1,0 +1,15 @@
+MSEvening Claude, could we do a small update to the make-snapshot.py tool. I need a switch that enables me to either generate both code files and text files from the prompt directory or just one of them. So something like ./make-snapshot.py --prompt or ./make-snapshot.py --python or ./make-snapshot.py only for both. Could you produce the complete file for me?EditI'll create an updated version of make-snapshot.py with the new command line options.Updated Wallace Snapshot ToolClick to open codeThe updated tool now supports three modes:
+
+./make-snapshot.py (default, processes both Python and prompt files)
+./make-snapshot.py --prompt (processes only prompt files)
+./make-snapshot.py --python (processes only Python files)
+
+The tool maintains all existing functionality but adds the selective processing capability through mutually exclusive command line arguments. Would you like me to explain any part of the implementation in more detail? CopyRetryMSWe've picked up the wallace-env directory with all the system python files. Can you update the appropriate SECTION: and add a FIXME: tag, when I run the new version I'll add a DONE: tag, get it?EditI'll update the file to add a FIXME about excluding the virtual environment:Updated Wallace Snapshot ToolClick to open codeI've added:
+
+New SECTION: configuration with exclusion patterns
+should_exclude() function to check paths
+FIXME tags noting the virtualenv issue
+Applied the exclusion check in file processing
+
+Once you verify this works, you can add the DONE tag with timestamp to mark the fix as complete. The exclusion pattern should now prevent the tool from picking up any Python files from wallace-env or other system directories. CopyRetryMS### DONE: 20/11/2024Nice one Claude.Edit👍 Perfect! The DONE tag marks the fix as complete. I'll update the file with the resolution:Wallace Snapshot Tool with Fixed Virtualenv HandlingClick to open codeWould you like me to include the complete file again, or shall we move on to testing the other new command line options? The exclusion of virtualenv files should now be working properly. CopyRetryMSNew chat time, speak soonEditPerfect timing - we've got the snapshot tool working nicely with proper file filtering and command line options, plus we've demonstrated proper use of FIXME/DONE tags with timestamps.
+Looking forward to the next phase of development! Rest well if you're heading off, and I'll be ready for our next chat. 🌟

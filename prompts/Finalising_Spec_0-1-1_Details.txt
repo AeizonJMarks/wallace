@@ -1,0 +1,451 @@
+MS
+Could you sync with your knowledge base, I want to finalise spec 0.1.1.
+
+Let me analyze your updated knowledge base to help finalize spec 0.1.1.
+Current status from our latest discussions:
+Block structure refined (META/SYNOPSIS/CONTENTS)
+SECTION/NOITCES symmetry established
+Shebang rules formalized (.wal mandatory, source optional)
+Number format tightened (no spaces with units)
+All 15 core tags finalized, including TRIAGE
+Reserved tags (TAG/END) clarified
+Chapter-based organization solidified
+Would you like to focus on any specific aspect for finalization before proceeding with Lark implementation?
+Note: I'll maintain token efficiency in our discussion, but use full Wallace compliance in any code files or artifacts we generate.
+Copy
+Retry
+
+
+MS
+We need to do a few things. First can we change METRIC: to METRICS: and use a similar syntax to TAGS: where, each entry is a contained 'chunk' of information delimited by space. Next, we need to handle block comment syntax, such as HTML/XML and C's // double comment symbol. The C example adds the fact that a language may use 2 symbols to denote comments, we just add onto this. The block syntax means all wallace tags are on a newline as already spec'ed and delimited by the language's block syntax. That block syntax starts on its own new line and ends on its own new line. I need this added to the spec. Before your start to construct the actual spec could you confirm that you understand these changes?
+
+Yes, I understand both changes needed for 0.1.1:
+METRICS: Change
+Rename METRIC to METRICS
+Space-delimited format like TAGS:
+Example: METRICS: 24hrs $50.00 15mins 99.9%
+Block Comment Handling
+Support languages with block syntax (/* */ in C, <!-- --> in HTML)
+Handle languages with multiple comment styles (// and /* */ in C)
+Block comments must:
+Start on new line
+Contain Wallace tags on their own lines
+End on new line
+Examples:
+html
+
+Copy
+<!-- 
+#### META: Title: Example
+#### SYNOPSIS: Test file
+-->
+c
+
+Copy
+/* 
+#### META: Title: Example
+#### SYNOPSIS: Test file
+*/
+Would you like me to proceed with updating the specification with these changes?
+Copy
+Retry
+
+
+MS
+Excellent, could you give me an overview of the whole complete spec, including Chapters and sub-headings?
+
+Wallace Language Specification v0.1.1
+Chapter 1: Fundamentals
+Introduction & Core Principles
+File Types (.wal and source)
+Comment Syntax
+Single-line comments
+Block comments
+Multiple comment styles
+Basic Structure
+Shebang requirements
+Header blocks
+Blank line delimiters
+Chapter 2: Core Tags & Elements
+Header Components
+META
+SYNOPSIS
+CONTENTS
+Section Structure
+SECTION/NOITCES pattern
+Nesting rules
+Block delimiters
+Reserved Tags
+TAG:
+END:
+Chapter 3: Data & References
+METRICS Format
+Space-delimited values
+Number patterns
+Units and currencies
+TAGS Format
+Extension declaration
+Space-delimited syntax
+Links & References
+Path formats
+Line numbers
+Section pointers
+Chapter 4: Implementation
+Parser Requirements
+Language detection
+Comment style handling
+Error management
+Tool Integration
+Editor support
+Build systems
+Version control
+Future Directions
+Wallace interpreter
+Extension system
+Enhanced features
+Would you like me to detail any specific section further?
+Copy
+Retry
+
+
+MS
+We've changed SECTION: NOITCES: to SECTION: and the SECTION: END: also I want to include every tag in the spec. Could you list each tag you think should be in the spec so I can check them?
+
+Core Tags for Wallace 0.1.1:
+META: File metadata & context
+TAGS: Extension declarations
+SYNOPSIS: AI analysis
+SECTION: Structural organization (ended by END: SECTION:)
+TODO: Planned work
+DONE: Task completion
+FIXME: Issues needing attention
+LINK: Cross-references
+IDEA: Future possibilities
+REVIEW: Need examination
+NOTE: General comments
+FUNCTION: Function documentation
+METRICS: Space-delimited measurements
+TRIAGE: Issue prioritization
+TAG: Reserved for extensions
+Let me know if any tags are missing or need adjustment.
+Copy
+Retry
+
+
+MS
+That's it. Could you outline the spec again, including these points with a sub-heading for each tag?
+
+Wallace Language Specification v0.1.1
+Chapter 1: Fundamentals
+Introduction & Core Principles
+File Types
+.wal structure
+Source file integration
+Comment Syntax
+Single-line comments
+Block comments
+Multiple styles
+Chapter 2: Header Components
+Shebang Rules
+META Block
+SYNOPSIS Block
+CONTENTS Section
+Chapter 3: Core Tags
+Structural
+SECTION: (with END: SECTION:)
+LINK: Cross-references
+Task Management
+TODO: Planned work
+DONE: Task completion
+FIXME: Issues
+TRIAGE: Prioritization
+Analysis
+IDEA: Future possibilities
+REVIEW: Need examination
+NOTE: General comments
+FUNCTION: Documentation
+METRICS: Space-delimited data
+Extensions
+TAGS: Active extensions
+TAG: Reserved mechanism
+Chapter 4: Implementation & Integration
+Parser Requirements
+Tool Integration
+Future Directions
+Would you like me to expand any section?
+Copy
+Retry
+
+
+MS
+You've missed the Data & Reference section also there is no number format entry, you've included it in METRICS but numbers are used across all of the tags if necessary. Could you update the overview?
+
+Wallace Language Specification v0.1.1
+Chapter 1: Fundamentals
+Introduction & Core Principles
+File Types
+.wal structure
+Source file integration
+Comment Syntax
+Single-line comments
+Block comments
+Multiple styles
+Chapter 2: Header Components
+Shebang Rules
+META Block
+SYNOPSIS Block
+CONTENTS Section
+Chapter 3: Data Elements
+Number Format
+Basic structure
+Currency notation
+Units
+Decimal handling
+Reference Format
+Path syntax
+Line numbers
+Section pointers
+URIs
+Chapter 4: Core Tags
+Structural
+SECTION: (with END: SECTION:)
+LINK: Cross-references
+Task Management
+TODO: Planned work
+DONE: Task completion
+FIXME: Issues
+TRIAGE: Prioritization
+Analysis
+IDEA: Future possibilities
+REVIEW: Need examination
+NOTE: General comments
+FUNCTION: Documentation
+METRICS: Space-delimited data
+Extensions
+TAGS: Active extensions
+TAG: Reserved mechanism
+Chapter 5: Implementation & Integration
+Parser Requirements
+Tool Integration
+Future Directions
+Copy
+Retry
+
+
+MS
+Before we begin, could you analyse this structure. Do you have enough information to produce a complete and comprehensive ebnf file that we'll use to implement the Lark parser?
+
+Yes, I have enough information to create a complete EBNF specification. The structure provides:
+Complete tag set with formats
+Clear containment rules (header blocks, sections)
+All data formats (numbers, references)
+Comment syntax patterns (single-line, block)
+File structure requirements (.wal vs source)
+Delimiter rules
+Identifier requirements
+Key areas for EBNF:
+Block nesting rules
+Comment pattern matching
+Space-delimited formats (METRICS/TAGS)
+END: SECTION: pattern
+Number format with units
+Link/reference syntax
+Would you like me to proceed with creating the complete EBNF specification?
+Copy
+Retry
+
+
+MS
+Not yet! Can you produce a separate 'code' file in HTML for each chapter that details this spec. So the first file is Chapter 1 the next Chapter 2 etc. Could you produce one at a time, I'll ask for each file separately?
+
+I'll create Chapter 1 as a properly formatted HTML file:
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>Wallace Language Specification v0.1.1 - Chapter 1</title> <style> body { max-width: 800px; margin: auto; padding: 20px; } pre { background: #f4f4f4; padding: 10px; } </style> </head> <body> <!-- META: Title: Wallace Specification Chapter 1: Fundamentals --> <!-- META: Version: 0.1.1 --> <!-- META: Author: Claude and Human --> <!-- META: PATH: spec/chapter1.html -->
+
+Copy
+<!-- SYNOPSIS: Core foundational chapter defining basic Wallace structures -->
+<!-- SYNOPSIS: Establishes file types, comment syntax, and basic rules -->
+
+<!-- SECTION: introduction -->
+<h1>Wallace Language Specification v0.1.1</h1>
+<h2>Chapter 1: Fundamentals</h2>
+
+<h3>Introduction</h3>
+<p>Wallace is a structured comment protocol enabling human-AI collaboration in software development. It provides a standardized communication layer while maintaining language agnosticism and tool independence.</p>
+
+<h4>Core Principles</h4>
+<ul>
+    <li>Comments as first-class communication channel</li>
+    <li>Language agnostic design</li>
+    <li>Human readability paramount</li>
+    <li>Machine parseability essential</li>
+    <li>Minimal overhead</li>
+    <li>Progressive adoption support</li>
+</ul>
+<!-- END: SECTION: introduction -->
+
+<!-- SECTION: file-types -->
+<h3>File Types</h3>
+
+<h4>.wal Files</h4>
+<p>Pure Wallace files (.wal) MUST follow this exact structure:</p>
+<ol>
+    <li>Shebang line (required)</li>
+    <li>Blank line delimiter</li>
+    <li>META block</li>
+    <li>Blank line delimiter</li>
+    <li>SYNOPSIS block</li>
+    <li>Blank line delimiter</li>
+    <li>CONTENTS section</li>
+</ol>
+
+<h4>Example .wal file:</h4>
+<pre>
+#!/usr/bin/env python3
+META: Title: Example File
+META: Version: 1.0.0
+META: Author: Development Team
+SYNOPSIS: Example Wallace file
+SYNOPSIS: Demonstrates proper structure
+CONTENTS:
+SECTION: example
+Content here...
+END: SECTION: example</pre>
+
+Copy
+<h4>Source Files</h4>
+<p>Source code files MAY include Wallace tags using their native comment syntax. Shebang lines are optional for source files.</p>
+<!-- END: SECTION: file-types -->
+
+<!-- SECTION: comment-syntax -->
+<h3>Comment Syntax</h3>
+
+<h4>Single-Line Comments</h4>
+<table border="1">
+    <tr>
+        <th>Language</th>
+        <th>Syntax</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td>Python</td>
+        <td>#</td>
+        <td># #### META: Title</td>
+    </tr>
+    <tr>
+        <td>Lisp</td>
+        <td>;</td>
+        <td>;; #### META: Title</td>
+    </tr>
+    <tr>
+        <td>C/C++</td>
+        <td>//</td>
+        <td>// #### META: Title</td>
+    </tr>
+</table>
+
+<h4>Block Comments</h4>
+<p>Block comments MUST:</p>
+<ul>
+    <li>Start on a new line</li>
+    <li>Contain Wallace tags on their own lines</li>
+    <li>End on a new line</li>
+</ul>
+
+<h4>Examples:</h4>
+<pre>
+<!-- HTML Block Comment #### META: Title: Example #### SYNOPSIS: Test file -->
+/* C-style Block Comment
+META: Title: Example
+SYNOPSIS: Test file
+*/</pre>
+
+Copy
+<h4>Multiple Comment Styles</h4>
+<p>Languages with multiple comment styles (like C's // and /* */) may use either style, but must be consistent within each Wallace block.</p>
+<!-- END: SECTION: comment-syntax -->
+
+<!-- SECTION: basic-structure -->
+<h3>Basic Structure</h3>
+
+<h4>Line Format</h4>
+<p>Every Wallace tag MUST follow this format:</p>
+<pre>&lt;comment-prefix&gt;&lt;tag-level&gt; &lt;TAG&gt;: &lt;content&gt;&lt;EOL&gt;</pre>
+
+<p>Where:</p>
+<ul>
+    <li><code>&lt;comment-prefix&gt;</code>: Language-specific comment symbol (empty for .wal)</li>
+    <li><code>&lt;tag-level&gt;</code>: ### for standard tags, #### for META/SYNOPSIS</li>
+    <li><code>&lt;TAG&gt;</code>: Uppercase letters only</li>
+    <li><code>:</code>: Required colon</li>
+    <li><code>&lt;content&gt;</code>: Tag content (extends to end of line)</li>
+</ul>
+
+<h4>Blank Line Rules</h4>
+<ul>
+    <li>One blank line REQUIRED between header blocks</li>
+    <li>No blank line REQUIRED within blocks</li>
+    <li>Blank lines in code/content preserved</li>
+    <li>Trailing whitespace ignored</li>
+    <li>Leading whitespace preserved</li>
+</ul>
+<!-- END: SECTION: basic-structure -->
+</body> </html>
+Would you like me to proceed with Chapter 2?
+Copy
+Retry
+
+
+MS
+No something has changed recently in your usage, before, I was able to get a separate window with the code separated from the message with the ability to download or copy that complete 'file' that window. Recently I've lost this functionality you now respond with the 'code' embedded in the message itself. I think it's something Anthropic have added to your web UI, they've added a concise or full response switch. I've changed to full response so hopefully you give me your response as before. Please try again.
+
+Let me try creating Chapter 1 again, aiming for the separate code window display:
+
+Wallace Language Specification - Chapter 1: Fundamentals
+Click to open website
+Is this appearing in a separate code window now? If so, would you like me to proceed with Chapter 2?
+Copy
+Retry
+
+
+MS
+That's it! Finally. Could you do that again, but include the complete Chapter one file as one file?
+
+Let me create the complete Chapter 1 as a single, separate file:
+
+Wallace Language Specification - Chapter 1: Fundamentals
+Click to open website
+Would you like me to proceed with Chapter 2 in the same format?
+Copy
+Retry
+
+
+MS
+Yes please Claude, that was perfect. Chapter 2 please.
+
+Let me create Chapter 2 as a separate file:
+
+Wallace Language Specification - Chapter 2: Header Components
+Click to open website
+Would you like me to proceed with Chapter 3?
+Copy
+Retry
+
+
+MS
+Can I have chapter 3 exactly as the last two?
+
+
+Wallace Language Specification - Chapter 3: Data Elements
+Click to open website
+Would you like me to proceed with Chapter 4?
+Copy
+Retry
+
+
+MS
+Yes please Claude
+
+
+Wallace Language Specification - Chapter 4: Core Tags
+Click to open website
+Would you like me to proceed with Chapter 5 (Implementation & Integration)?

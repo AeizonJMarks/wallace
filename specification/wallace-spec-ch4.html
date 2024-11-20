@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallace Language Specification v0.1.1 - Chapter 4</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <style>
+        body { max-width: 800px; margin: auto; padding: 20px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        h1, h2 { color: #333; }
+        h3 { color: #444; margin-top: 30px; }
+        h4 { color: #555; }
+    </style>
+</head>
+<body>
+    <!-- META: Title: Wallace Specification Chapter 4: Core Tags -->
+    <!-- META: Version: 0.1.1 -->
+    <!-- META: Author: Claude and Human -->
+    <!-- META: PATH: spec/chapter4.html -->
+    
+    <!-- SYNOPSIS: Documents all core Wallace tags and their usage -->
+    <!-- SYNOPSIS: Defines structural, task management, and analysis tags -->
+    <!-- SYNOPSIS: Details extension system and reserved tags -->
+    
+    <!-- SECTION: introduction -->
+    <h1>Wallace Language Specification v0.1.1</h1>
+    <h2>Chapter 4: Core Tags</h2>
+
+    <h3>Introduction</h3>
+    <p>This chapter defines all core tags in the Wallace system, their usage patterns, and relationships.</p>
+    <!-- END: SECTION: introduction -->
+
+    <!-- SECTION: structural -->
+    <h3>Structural Tags</h3>
+    
+    <h4>SECTION Tag</h4>
+    <p>Defines code and content blocks:</p>
+    <pre>
+### SECTION: identifier
+Content here...
+### END: SECTION: identifier</pre>
+    
+    <ul>
+        <li>Identifier must match in opening and closing tags</li>
+        <li>May be nested</li>
+        <li>Content may include other tags</li>
+        <li>Requires explicit END: SECTION: closure</li>
+    </ul>
+
+    <h4>LINK Tag</h4>
+    <p>Creates references to other elements:</p>
+    <pre>
+### LINK: path/to/file.py:42
+### LINK: module.js#initialization
+### LINK: docs/spec.md#overview</pre>
+    
+    <ul>
+        <li>May reference files, lines, or sections</li>
+        <li>Follows reference format defined in Chapter 3</li>
+        <li>Must reference valid targets</li>
+    </ul>
+    <!-- END: SECTION: structural -->
+
+    <!-- SECTION: task-management -->
+    <h3>Task Management Tags</h3>
+    
+    <h4>TODO Tag</h4>
+    <p>Indicates planned work:</p>
+    <pre>
+### TODO: Implement error handling
+Implementation needed...
+### DONE: 17/11/2024</pre>
+
+    <h4>DONE Tag</h4>
+    <p>Marks task completion:</p>
+    <ul>
+        <li>Must include timestamp</li>
+        <li>May follow TODO or FIXME</li>
+        <li>Links task to completion time</li>
+    </ul>
+
+    <h4>FIXME Tag</h4>
+    <p>Indicates issues needing attention:</p>
+    <pre>
+### FIXME: Memory leak in loop
+Problem details...
+### DONE: 17/11/2024</pre>
+
+    <h4>TRIAGE Tag</h4>
+    <p>Prioritizes and categorizes issues:</p>
+    <pre>
+### TRIAGE: Critical - System crash
+### TRIAGE: Medium - Performance issue
+### TRIAGE: Low - UI enhancement</pre>
+    <!-- END: SECTION: task-management -->
+
+    <!-- SECTION: analysis -->
+    <h3>Analysis Tags</h3>
+    
+    <h4>IDEA Tag</h4>
+    <p>Documents potential improvements:</p>
+    <pre>
+### IDEA: Implement caching layer
+### IDEA: Add retry mechanism</pre>
+
+    <h4>REVIEW Tag</h4>
+    <p>Marks items needing examination:</p>
+    <pre>
+### REVIEW: Security implications
+### REVIEW: Performance impact</pre>
+
+    <h4>NOTE Tag</h4>
+    <p>Provides general commentary:</p>
+    <pre>
+### NOTE: Based on algorithm from paper X
+### NOTE: Requires special handling</pre>
+
+    <h4>FUNCTION Tag</h4>
+    <p>Documents function behavior:</p>
+    <pre>
+### FUNCTION: process_data(input: List) -> Dict
+### PURE: yes
+### EFFECTS: none</pre>
+
+    <h4>METRICS Tag</h4>
+    <p>Records measurements (space-delimited):</p>
+    <pre>
+### METRICS: 100ms 50MB 99.9%
+### METRICS: $50.00 24hrs 85%</pre>
+    <!-- END: SECTION: analysis -->
+
+    <!-- SECTION: extensions -->
+    <h3>Extension System</h3>
+    
+    <h4>TAGS Declaration</h4>
+    <p>Declares active extensions:</p>
+    <pre>
+### TAGS: EFFECTS PURE COMPLEXITY PERFORMANCE</pre>
+    
+    <ul>
+        <li>Space-delimited list</li>
+        <li>Must appear after META block</li>
+        <li>Defines allowed extension tags</li>
+    </ul>
+
+    <h4>Reserved Tags</h4>
+    <p>TAG: reserved for future extension system:</p>
+    <ul>
+        <li>Not currently implemented</li>
+        <li>Will provide plugin mechanism</li>
+        <li>Format to be specified</li>
+    </ul>
+    <!-- END: SECTION: extensions -->
+
+    <!-- SECTION: tag-relationships -->
+    <h3>Tag Relationships</h3>
+    
+    <h4>Task Flow</h4>
+    <ul>
+        <li>TODO/FIXME → DONE</li>
+        <li>TRIAGE can precede TODO/FIXME</li>
+        <li>REVIEW can follow TODO/FIXME</li>
+    </ul>
+
+    <h4>Documentation Flow</h4>
+    <ul>
+        <li>FUNCTION describes implementations</li>
+        <li>NOTE provides context</li>
+        <li>METRICS records measurements</li>
+        <li>IDEA suggests improvements</li>
+    </ul>
+
+    <h4>Structural Relationships</h4>
+    <ul>
+        <li>SECTION provides organization</li>
+        <li>LINK creates connections</li>
+        <li>TAGS declares extensions</li>
+    </ul>
+    <!-- END: SECTION: tag-relationships -->
+
+    <!-- SECTION: validation -->
+    <h3>Tag Validation</h3>
+    
+    <h4>Format Rules</h4>
+    <ul>
+        <li>Tags must be uppercase</li>
+        <li>Must have proper prefix</li>
+        <li>Must have space after colon</li>
+        <li>Must have content</li>
+    </ul>
+
+    <h4>Content Rules</h4>
+    <ul>
+        <li>Task tags may have DONE</li>
+        <li>METRICS must be space-delimited</li>
+        <li>SECTION must have matching END</li>
+        <li>LINK must have valid target</li>
+    </ul>
+
+    <h4>Extension Rules</h4>
+    <ul>
+        <li>Extensions must be declared</li>
+        <li>Reserved tags not usable</li>
+        <li>Custom tags follow format</li>
+    </ul>
+    <!-- END: SECTION: validation -->
+</body>
+</html>
