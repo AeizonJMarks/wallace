@@ -1,0 +1,24 @@
+#### META: Title: Nested Sections Test File
+#### META: Version: 0.1.1
+#### META: Author: Test Suite
+#### META: PATH: tests/test_files/mixed/nested_sections.wal
+
+#### SYNOPSIS: Test file for nested section handling.
+#### SYNOPSIS: Validates section nesting and cross-references.
+
+#### CONTENTS:
+
+### SECTION: outer-section
+#### TODO: Complete outer section implementation
+
+### SECTION: inner-section-1
+#### METRICS: complexity 2 coverage 100%
+#### TODO: Implement inner functionality
+### END: SECTION: inner-section-1
+
+### SECTION: inner-section-2
+#### LINK: ./inner-section-1#todo
+#### TODO: Add cross-reference handling
+### END: SECTION: inner-section-2
+
+### END: SECTION: outer-section

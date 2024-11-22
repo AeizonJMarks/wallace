@@ -1,0 +1,50 @@
+<!-- META: Title: HTML Test File -->
+<!-- META: Version: 0.1.1 -->
+<!-- META: Author: Test Suite -->
+<!-- META: PATH: tests/test_files/html/test.html -->
+
+<!-- SYNOPSIS: Test file for HTML comment syntax. -->
+<!-- SYNOPSIS: Tests Wallace tags in HTML documents. -->
+<!-- SYNOPSIS: Includes component and structure tests. -->
+
+<!-- CONTENTS: -->
+
+<!-- SECTION: header-component -->
+<!-- TODO: Add responsive design -->
+<!-- METRICS: accessibility 95% responsive 100% -->
+<header class="main-header">
+    <h1>Test Header</h1>
+    <nav>
+        <ul>
+            <li>Home</li>
+        </ul>
+    </nav>
+</header>
+<!-- END: SECTION: header-component -->
+
+<!-- SECTION: main-content -->
+<!-- FIXME: Improve semantic structure -->
+<!-- REVIEW: Check accessibility standards -->
+<!-- TODO: Add content sections -->
+<!--       with proper ARIA labels -->
+<!--       for screen readers -->
+<main>
+    <article>
+        <h2>Main Content</h2>
+        <p>Content here.</p>
+    </article>
+</main>
+<!-- END: SECTION: main-content -->
+
+<!-- SECTION: components -->
+<!-- NOTE: Reusable component library -->
+<!-- IDEA: Create component gallery -->
+<!-- LINK: ./main-content#article -->
+
+<template id="card-component">
+    <div class="card">
+        <h3>Card Title</h3>
+        <p>Card content</p>
+    </div>
+</template>
+<!-- END: SECTION: components -->

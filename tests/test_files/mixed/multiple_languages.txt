@@ -1,0 +1,38 @@
+#### META: Title: Mixed Language Test File
+#### META: Version: 0.1.1
+#### META: Author: Test Suite
+#### META: PATH: tests/test_files/mixed/multiple_languages.txt
+
+#### SYNOPSIS: Test file containing multiple language snippets.
+#### SYNOPSIS: Validates parsing across different comment styles.
+
+#### CONTENTS:
+
+### SECTION: python-code
+#### TODO: Add type hints to Python functions
+
+def example_function():
+    # Regular Python comment
+    pass
+
+### END: SECTION: python-code
+
+### SECTION: c-code
+//// TODO: Add memory management
+
+void c_function() {
+    // Regular C comment
+    return;
+}
+
+### END: SECTION: c-code
+
+### SECTION: javascript-code
+//// TODO: Add async handling
+
+function jsFunction() {
+    // Regular JS comment
+    return true;
+}
+
+### END: SECTION: javascript-code

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- META: Title: XML Test File -->
+<!-- META: Version: 0.1.1 -->
+<!-- META: Author: Test Suite -->
+<!-- META: PATH: tests/test_files/xml/test.xml -->
+
+<!-- SYNOPSIS: Test file for XML comment syntax. -->
+<!-- SYNOPSIS: Validates Wallace tags in XML documents. -->
+<!-- SYNOPSIS: Tests schema and structure documentation. -->
+
+<!-- CONTENTS: -->
+
+<!-- SECTION: schema-definition -->
+<!-- TODO: Add validation rules -->
+<!-- METRICS: completeness 90% validated 100% -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="child" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<!-- END: SECTION: schema-definition -->
+
+<!-- SECTION: data-structure -->
+<!-- REVIEW: Verify data structure -->
+<!-- FIXME: Add missing elements -->
+<!-- TODO: Document structure -->
+<!--       with proper examples -->
+<!--       and usage guidelines -->
+<root>
+    <child>Example Data</child>
+    <metadata>
+        <created>2024-03-22</created>
+        <author>Test Suite</author>
+    </metadata>
+</root>
+<!-- END: SECTION: data-structure -->
+
+<!-- SECTION: transformations -->
+<!-- NOTE: XSLT transformation rules -->
+<!-- IDEA: Add template library -->
+<!-- LINK: ./schema-definition#root -->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/">
+        <!-- Template content -->
+    </xsl:template>
+</xsl:stylesheet>
+<!-- END: SECTION: transformations -->

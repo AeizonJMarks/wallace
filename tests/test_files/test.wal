@@ -1,0 +1,67 @@
+#!/usr/bin/env wallace
+
+#### META: Title: Wallace Native Format Test
+#### META: Version: 0.1.1
+#### META: Author: Test Suite
+#### META: PATH: tests/test_files/wallace/test.wal
+
+#### SYNOPSIS: Native Wallace format test file.
+#### SYNOPSIS: Tests complete Wallace syntax and features.
+#### SYNOPSIS: Demonstrates proper structure and nesting.
+
+#### CONTENTS:
+
+### SECTION: metadata
+#### METRICS: complexity 1 coverage 100%
+#### TAGS: documentation reference guide
+
+Project Metadata:
+- Version: 0.1.1
+- Status: Alpha
+- License: MIT
+
+### END: SECTION: metadata
+
+### SECTION: documentation
+#### TODO: Complete API documentation
+#### REVIEW: Verify documentation accuracy
+#### LINK: ./metadata#version
+
+### SECTION: api-docs
+#### FUNCTION: process_data(input: json) -> json
+####           Processes input data and returns results
+#### METRICS: documented 80% examples 60%
+
+API Documentation:
+1. Endpoints
+2. Parameters
+3. Response formats
+
+### END: SECTION: api-docs
+
+### SECTION: examples
+#### NOTE: Example code snippets
+#### IDEA: Add interactive examples
+####       with live code execution
+####       capabilities
+
+Code Examples:
+1. Basic usage
+2. Advanced patterns
+3. Integration examples
+
+### END: SECTION: examples
+
+### END: SECTION: documentation
+
+### SECTION: roadmap
+#### TODO: Define milestone targets
+#### TRIAGE: Prioritize feature requests
+#### METRICS: planned 85% scheduled 60%
+
+Development Roadmap:
+Q1: Feature A
+Q2: Feature B
+Q3: Feature C
+
+### END: SECTION: roadmap
