@@ -1,22 +1,10 @@
 #!/usr/bin/env python3
 
-#### META: Title: Wallace Test Configuration 
-#### META: Version: 0.1.1
-#### META: Author: Claude + Human
-#### META: PATH: tests/conftest.py
-
-#### SYNOPSIS: Test fixtures for Wallace smoke tests
-#### SYNOPSIS: Creates test files and configurations
-
-#### CONTENTS:
-
 import pytest
 import os
 import tempfile
-import shutil
 from pathlib import Path
 
-### SECTION: fixtures
 @pytest.fixture
 def sample_files(tmp_path):
     """Create sample files for testing."""
@@ -56,6 +44,30 @@ def mock_file_content():
         return "\n".join(content)
     return _create_content
 
+@pytest.fixture 
+def file_structure(tmp_path):
+    """Create test file structure."""
+    src_dir = tmp_path / "src"
+    test_dir = tmp_path / "tests"
+    src_dir.mkdir()
+    test_dir.mkdir()
+    
+    # Create consistent test content
+    test_content = '''#### META: Title: Test
+#### META: Version: 0.1.1
+#### META: PATH: test.py
+#### SYNOPSIS: Test file
+#### CONTENTS:
+'''
+    
+    main_file = src_dir / "main.py"
+    main_file.write_text(test_content)
+    
+    test_file = test_dir / "test_main.py"
+    test_file.write_text(test_content)
+    
+    return tmp_path
+
 @pytest.fixture
 def temp_file():
     """Create a temporary file."""
@@ -66,41 +78,7 @@ def temp_file():
         return path
     return _create_temp_file
 
-@pytest.fixture
-def file_structure(tmp_path):
-    """Create a test file structure."""
-    # Create directories
-    src_dir = tmp_path / "src"
-    test_dir = tmp_path / "tests"
-    src_dir.mkdir()
-    test_dir.mkdir()
-
-    # Create files with valid Wallace headers
-    main_content = '''#### META: Title: Main
-#### META: Version: 0.1.1
-#### META: PATH: src/main.py
-#### SYNOPSIS: Main module
-#### CONTENTS:
-'''
-    main_file = src_dir / "main.py"
-    main_file.write_text(main_content)
-
-    test_content = '''#### META: Title: Test
-#### META: Version: 0.1.1
-#### META: PATH: tests/test_main.py
-#### SYNOPSIS: Test module
-#### CONTENTS:
-'''
-    test_file = test_dir / "test_main.py"
-    test_file.write_text(test_content)
-
-    return tmp_path
-
-### SECTION: configuration
 def pytest_configure(config):
-    """Configure pytest markers."""
     config.addinivalue_line("markers", "parser: mark test as parser test")
-    config.addinivalue_line("markers", "integration: mark test as integration test")
+    config.addinivalue_line("markers", "integration: mark test as integration test") 
     config.addinivalue_line("markers", "edge_case: mark test as edge case test")
-
-### END: SECTION: configuration
