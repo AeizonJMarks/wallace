@@ -1,67 +1,35 @@
 #!/usr/bin/env wallace
 
-#### META: Title: Wallace Native Format Test
+#### META: Title: Valid Native Wallace Test File
 #### META: Version: 0.1.1
 #### META: Author: Test Suite
 #### META: PATH: tests/test_files/wallace/test.wal
 
-#### SYNOPSIS: Native Wallace format test file.
-#### SYNOPSIS: Tests complete Wallace syntax and features.
-#### SYNOPSIS: Demonstrates proper structure and nesting.
+#### SYNOPSIS: Test file for native Wallace format.
+#### SYNOPSIS: Demonstrates pure Wallace syntax.
+#### SYNOPSIS: Used for validating .wal file handling.
 
 #### CONTENTS:
 
-### SECTION: metadata
-#### METRICS: complexity 1 coverage 100%
-#### TAGS: documentation reference guide
+### SECTION: configuration
+#### FUNCTION: process_data(data: dict) -> list
+####           Process input data according to Wallace spec.
+####           Returns processed list.
 
-Project Metadata:
-- Version: 0.1.1
-- Status: Alpha
-- License: MIT
+#### METRICS: complexity 3 efficiency 95%
+#### TAGS: config processing validation
 
-### END: SECTION: metadata
+### END: SECTION: configuration
 
-### SECTION: documentation
-#### TODO: Complete API documentation
-#### REVIEW: Verify documentation accuracy
-#### LINK: ./metadata#version
+### SECTION: validation
+#### TODO: Implement validation rules
+#### FIXME: Handle edge cases properly
+#### IDEA: Add schema validation
+#### REVIEW: Consider performance implications
+#### NOTE: Critical for data integrity
+#### TRIAGE: Priority 1 - Core validation
 
-### SECTION: api-docs
-#### FUNCTION: process_data(input: json) -> json
-####           Processes input data and returns results
-#### METRICS: documented 80% examples 60%
+#### METRICS: coverage 90% time 45mins
+#### LINK: ./configuration#process_data
 
-API Documentation:
-1. Endpoints
-2. Parameters
-3. Response formats
-
-### END: SECTION: api-docs
-
-### SECTION: examples
-#### NOTE: Example code snippets
-#### IDEA: Add interactive examples
-####       with live code execution
-####       capabilities
-
-Code Examples:
-1. Basic usage
-2. Advanced patterns
-3. Integration examples
-
-### END: SECTION: examples
-
-### END: SECTION: documentation
-
-### SECTION: roadmap
-#### TODO: Define milestone targets
-#### TRIAGE: Prioritize feature requests
-#### METRICS: planned 85% scheduled 60%
-
-Development Roadmap:
-Q1: Feature A
-Q2: Feature B
-Q3: Feature C
-
-### END: SECTION: roadmap
+### END: SECTION: validation

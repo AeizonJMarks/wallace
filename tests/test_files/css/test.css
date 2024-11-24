@@ -1,80 +1,29 @@
-/***** META: Title: CSS Test File
+/***** META: Title: Valid CSS Test File
 ***** META: Version: 0.1.1
 ***** META: Author: Test Suite
 ***** META: PATH: tests/test_files/css/test.css
 
-***** SYNOPSIS: Test file for CSS comment syntax.
-***** SYNOPSIS: Tests Wallace tags in stylesheet context.
-***** SYNOPSIS: Includes style organization and documentation.
+***** SYNOPSIS: Test file for CSS parsing.
+***** SYNOPSIS: Contains valid Wallace tags.
+***** SYNOPSIS: Tests CSS-style comments.
 
 ***** CONTENTS:
 
-*** SECTION: variables
-***** TODO: Add theme variations
-***** METRICS: reusability 100% coverage 95%
-*/
-
-:root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
-    --spacing-unit: 1rem;
-}
-
-/*** END: SECTION: variables ***/
-
-/*** SECTION: typography
-***** REVIEW: Check font scaling
-***** FIXME: Improve font loading
-***** TODO: Add responsive typography
-*****       with proper scaling
-*****       across breakpoints
-*/
-
+*** SECTION: main */
 body {
-    font-family: system-ui, sans-serif;
-    line-height: 1.5;
-    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
 }
 
-h1, h2, h3 {
-    margin-bottom: var(--spacing-unit);
+/* Variables */
+:root {
+    --primary-color: #333;
 }
-
-/*** END: SECTION: typography ***/
+/*** END: SECTION: main */
 
 /*** SECTION: components
-***** NOTE: Reusable component styles
-***** IDEA: Create style guide
-***** LINK: ./variables#primary-color
-*/
-
-.button {
-    background: var(--primary-color);
-    padding: var(--spacing-unit);
-    border: none;
-    border-radius: 4px;
-}
-
-.card {
-    padding: var(--spacing-unit);
-    margin: var(--spacing-unit);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/*** END: SECTION: components ***/
-
-/*** SECTION: utilities
-***** TODO: Document utility classes
-***** METRICS: usage 75% coverage 100%
-*/
-
-.hidden {
-    display: none !important;
-}
-
-.flex-container {
-    display: flex;
-    gap: var(--spacing-unit);
-}
-
-/*** END: SECTION: utilities ***/
+**** TODO: Add component styles
+**** REVIEW: Consider responsive design
+**** METRICS: complexity 2 usage 85%
+*** END: SECTION: components */

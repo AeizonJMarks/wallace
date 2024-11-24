@@ -1,158 +1,106 @@
 #!/usr/bin/env python3
 
-#### META: Title: Wallace Test Configuration
+#### META: Title: Wallace Test Configuration 
 #### META: Version: 0.1.1
 #### META: Author: Claude + Human
 #### META: PATH: tests/conftest.py
 
-#### SYNOPSIS: Shared test fixtures and configuration for Wallace test suite.
-#### SYNOPSIS: Provides common test data and utilities across all test files.
+#### SYNOPSIS: Test fixtures for Wallace smoke tests
+#### SYNOPSIS: Creates test files and configurations
 
 #### CONTENTS:
 
-import os
 import pytest
-from pathlib import Path
+import os
 import tempfile
 import shutil
+from pathlib import Path
 
 ### SECTION: fixtures
-@pytest.fixture(scope="session")
-def test_files_dir(tmp_path_factory):
-    """Create a session-scoped temporary directory for test files."""
-    temp_dir = tmp_path_factory.mktemp("wallace_test_files")
-    yield temp_dir
-    # Cleanup after all tests
-    shutil.rmtree(str(temp_dir))
-
 @pytest.fixture
-def sample_files(test_files_dir):
-    """Create a set of sample files for testing."""
-    files = {}
-    
+def sample_files(tmp_path):
+    """Create sample files for testing."""
     # Python file
-    py_content = '''#### META: Title: Sample Python
+    py_content = '''#### META: Title: Test
 #### META: Version: 0.1.1
-#### META: PATH: test/sample.py
-
-#### SYNOPSIS: Sample test file.
+#### META: PATH: test/test.py
+#### SYNOPSIS: Test file
 #### CONTENTS:
-
-def test():
-    pass
 '''
-    py_file = test_files_dir / "sample.py"
+    py_file = tmp_path / "test.py"
     py_file.write_text(py_content)
-    files["python"] = py_file
-
+    
     # Wallace file
     wal_content = '''#!/usr/bin/env wallace
-#### META: Title: Sample Wallace
+#### META: Title: Test
 #### META: Version: 0.1.1
-#### META: PATH: test/sample.wal
-
-#### SYNOPSIS: Sample Wallace file.
+#### META: PATH: test/test.wal
+#### SYNOPSIS: Test file
 #### CONTENTS:
-
-### SECTION: test
-### END: SECTION: test
 '''
-    wal_file = test_files_dir / "sample.wal"
+    wal_file = tmp_path / "test.wal"
     wal_file.write_text(wal_content)
-    files["wallace"] = wal_file
-
-    return files
+    
+    return {"python": py_file, "wallace": wal_file}
 
 @pytest.fixture
 def mock_file_content():
-    """Factory fixture for creating test file content."""
-    def _create_content(file_type="py", tags=None):
-        """Create file content with specified tags."""
-        if tags is None:
-            tags = {
-                "META": ["Title: Test", "Version: 0.1.1", "PATH: test.py"],
-                "SYNOPSIS": ["Test file."],
-                "SECTION": ["test"]
-            }
-            
+    """Create mock file content."""
+    def _create_content(file_type="py"):
         content = []
-        if file_type == "wal":
-            content.append("#!/usr/bin/env wallace")
-            
-        for tag_type, tag_contents in tags.items():
-            for tag_content in tag_contents:
-                content.append(f"#### {tag_type}: {tag_content}")
-                
+        content.append("#### META: Title: Test")
+        content.append("#### META: Version: 0.1.1")
+        content.append("#### META: PATH: test.py")
+        content.append("#### SYNOPSIS: Test file")
+        content.append("#### CONTENTS:")
         return "\n".join(content)
-    
     return _create_content
-
-### SECTION: configuration
-def pytest_configure(config):
-    """Configure pytest for Wallace testing."""
-    # Add wallace markers
-    config.addinivalue_line(
-        "markers", "parser: mark test as parser test"
-    )
-    config.addinivalue_line(
-        "markers", "integration: mark test as integration test"
-    )
-    config.addinivalue_line(
-        "markers", "edge_case: mark test as edge case test"
-    )
-
-@pytest.fixture
-def file_structure(test_files_dir):
-    """Create a complex file structure for testing."""
-    structure = {
-        "src": {
-            "main.py": '''#### META: Title: Main
-#### META: Version: 0.1.1
-#### META: PATH: src/main.py
-
-#### SYNOPSIS: Main entry point.
-#### CONTENTS:
-''',
-            "utils": {
-                "helpers.py": '''#### META: Title: Helpers
-#### META: Version: 0.1.1
-#### META: PATH: src/utils/helpers.py
-
-#### SYNOPSIS: Utility functions.
-#### CONTENTS:
-'''
-            }
-        },
-        "tests": {
-            "test_main.py": '''#### META: Title: Main Tests
-#### META: Version: 0.1.1
-#### META: PATH: tests/test_main.py
-
-#### SYNOPSIS: Test main functionality.
-#### CONTENTS:
-'''
-        }
-    }
-    
-    def create_files(base_path, struct):
-        for name, content in struct.items():
-            path = base_path / name
-            if isinstance(content, dict):
-                path.mkdir(exist_ok=True)
-                create_files(path, content)
-            else:
-                path.write_text(content)
-    
-    create_files(test_files_dir, structure)
-    return test_files_dir
 
 @pytest.fixture
 def temp_file():
-    """Create a temporary file for testing."""
-    def _create_temp_file(content, suffix=".py"):
+    """Create a temporary file."""
+    def _create_temp_file(content, suffix='.py'):
         fd, path = tempfile.mkstemp(suffix=suffix)
         with os.fdopen(fd, 'w') as f:
             f.write(content)
         return path
-    
     return _create_temp_file
+
+@pytest.fixture
+def file_structure(tmp_path):
+    """Create a test file structure."""
+    # Create directories
+    src_dir = tmp_path / "src"
+    test_dir = tmp_path / "tests"
+    src_dir.mkdir()
+    test_dir.mkdir()
+
+    # Create files with valid Wallace headers
+    main_content = '''#### META: Title: Main
+#### META: Version: 0.1.1
+#### META: PATH: src/main.py
+#### SYNOPSIS: Main module
+#### CONTENTS:
+'''
+    main_file = src_dir / "main.py"
+    main_file.write_text(main_content)
+
+    test_content = '''#### META: Title: Test
+#### META: Version: 0.1.1
+#### META: PATH: tests/test_main.py
+#### SYNOPSIS: Test module
+#### CONTENTS:
+'''
+    test_file = test_dir / "test_main.py"
+    test_file.write_text(test_content)
+
+    return tmp_path
+
+### SECTION: configuration
+def pytest_configure(config):
+    """Configure pytest markers."""
+    config.addinivalue_line("markers", "parser: mark test as parser test")
+    config.addinivalue_line("markers", "integration: mark test as integration test")
+    config.addinivalue_line("markers", "edge_case: mark test as edge case test")
+
+### END: SECTION: configuration

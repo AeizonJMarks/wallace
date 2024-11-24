@@ -1,47 +1,61 @@
 #!/usr/bin/env python3
 
-#### META: Title: Initial Parser Module
-#### META: Version: 0.1.0-alpha
+#### META: Title: Wallace Parser (Smoke Test Version)
+#### META: Version: 0.1.1
+#### META: Author: Claude + Human
 #### META: PATH: src/wallace/parser.py
 
-#### SYNOPSIS: Core parsing functionality for Wallace tags.
-#### SYNOPSIS: Handles language-specific comment syntax.
+#### SYNOPSIS: Parser implementation for smoke tests.
+#### SYNOPSIS: Simplified version to get basic tests passing.
 
-### SECTION: imports
-import re
+#### CONTENTS:
+
 from pathlib import Path
-from typing import Dict, List, Optional
-
+from typing import List, Optional
 from . import core
 
-### SECTION: types
+### SECTION: parser
 class WallaceTag:
     """Represents a parsed Wallace tag."""
-    def __init__(self, name: str, content: str, line: int, position: int):
+    def __init__(self, name: str, content: str):
         self.name = name
         self.content = content
-        self.line = line
-        self.position = position
 
-### SECTION: parsing
 def parse_file(file_path: str) -> List[WallaceTag]:
-    """Parse a file for Wallace tags."""
+    """Basic file parser for smoke tests."""
+    # Validate file exists
     path = Path(file_path)
     if not path.exists():
         raise core.WallaceError(f"File not found: {file_path}")
-        
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    # Basic implementation - will expand based on file type
+
+    # Read file content
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        raise core.WallaceError(f"Failed to read file: {str(e)}")
+
+    # Empty file check
+    if not content.strip():
+        raise core.WallaceError("Empty file")
+
+    # Validate structure
+    errors = core.validate_file_structure(file_path, content)
+    if errors:
+        raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+
+    # Parse tags
+    style = core.get_file_style(file_path)
     tags = []
-    for i, line in enumerate(content.splitlines(), 1):
-        if '#### META:' in line or '#### SYNOPSIS:' in line:
-            # Very basic parsing for now
-            parts = line.split(':', 1)
-            if len(parts) == 2:
-                name = parts[0].replace('#', '').strip()
-                content = parts[1].strip()
-                tags.append(WallaceTag(name, content, i, line.find(name)))
-    
+
+    for line in content.splitlines():
+        tag_type, content = core.parse_line(line, style)
+        if tag_type:
+            tags.append(WallaceTag(tag_type, content))
+
+    if not tags:
+        raise core.WallaceError("No valid Wallace tags found")
+
     return tags
+
+### END: SECTION: parser

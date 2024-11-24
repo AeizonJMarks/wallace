@@ -1,0 +1,2320 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.0, pytest-7.4.3, pluggy-1.5.0
+rootdir: /Users/marks/wallace
+plugins: cov-6.0.0, anyio-4.6.2.post1
+collected 174 items
+
+snapshot/test_basic.py FF.FFF                                            [  3%]
+snapshot/test_core.py F                                                  [  4%]
+snapshot/test_edge_cases.py FFFFFF                                       [  7%]
+snapshot/test_integration.py FFF.FFF                                     [ 11%]
+snapshot/test_json_schema.py ...........                                 [ 17%]
+snapshot/test_json_stream.py .....................                       [ 29%]
+snapshot/test_languages.py FFFFFF                                        [ 33%]
+snapshot/test_sections.py FF.FF                                          [ 36%]
+snapshot/test_smoke.py ...F.F...                                         [ 41%]
+snapshot/test_wal_validator.py FFFFF..........                           [ 50%]
+tests/test_integration.py FFF.FFF                                        [ 54%]
+tests/test_smoke.py ...F.F...                                            [ 59%]
+tests/test_files/test_core.py F                                          [ 59%]
+tests/test_io/test_json_schema.py ...........                            [ 66%]
+tests/test_io/test_json_stream.py .....................                  [ 78%]
+tests/test_parser/test_basic.py FF.FFF                                   [ 81%]
+tests/test_parser/test_edge_cases.py FFFFFF                              [ 85%]
+tests/test_parser/test_languages.py FFFFFF                               [ 88%]
+tests/test_parser/test_sections.py FF.FF                                 [ 91%]
+tests/test_parser/test_wal_validator.py FFFFF..........                  [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_parse_valid_file _____________________________
+
+valid_python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_valid_file0/valid.py'
+
+    def test_parse_valid_file(valid_python_file):
+        """Test parsing a valid Python file with Wallace tags."""
+>       tags = parse_file(valid_python_file)
+
+snapshot/test_basic.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_valid_file0/valid.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_parse_invalid_file ____________________________
+
+invalid_python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_invalid_file0/invalid.py'
+
+    def test_parse_invalid_file(invalid_python_file):
+        """Test parsing a file with invalid Wallace tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(invalid_python_file)
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_basic.py:82: AssertionError
+_______________________________ test_empty_file ________________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_file0')
+
+    def test_empty_file(tmp_path):
+        """Test parsing an empty file."""
+        file = tmp_path / "empty.py"
+        file.write_text("")
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Empty file'
+E        +  where 'Empty file' = str(WallaceError('Empty file'))
+E        +    where WallaceError('Empty file') = <ExceptionInfo WallaceError('Empty file') tblen=2>.value
+
+snapshot/test_basic.py:96: AssertionError
+___________________________ test_validate_meta_tags ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_meta_tags0')
+
+    def test_validate_meta_tags(tmp_path):
+        """Test validation of META tags."""
+        file = tmp_path / "meta_tags.py"
+        content = '''#### META: Title: Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+snapshot/test_basic.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_meta_tags0/meta_tags.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_________________________ test_validate_synopsis_tags __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_synopsis_tags0')
+
+    def test_validate_synopsis_tags(tmp_path):
+        """Test validation of SYNOPSIS tags."""
+        file = tmp_path / "synopsis_tags.py"
+        content = '''#### META: Title: Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: First line
+    #### SYNOPSIS: Second line
+    #### SYNOPSIS: Third line
+    
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+snapshot/test_basic.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_synopsis_tags0/synopsis_tags.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_validate_tag _______________________________
+
+    def test_validate_tag():
+        """Test basic tag validation."""
+>       assert core.validate_tag("#### META: Test")
+E       AttributeError: module 'wallace.core' has no attribute 'validate_tag'
+
+snapshot/test_core.py:13: AttributeError
+___________________________ test_malformed_meta_tags ___________________________
+
+malformed_meta_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_malformed_meta_tags0/malformed_meta.py'
+
+    def test_malformed_meta_tags(malformed_meta_file):
+        """Test handling of malformed META tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(malformed_meta_file)
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_edge_cases.py:55: AssertionError
+____________________________ test_unicode_handling _____________________________
+
+unicode_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_unicode_handling0/unicode.py'
+
+    def test_unicode_handling(unicode_file):
+        """Test parsing file with Unicode characters."""
+>       tags = parse_file(unicode_file)
+
+snapshot/test_edge_cases.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_unicode_handling0/unicode.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_whitespace_variants ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_whitespace_variants0')
+
+    def test_whitespace_variants(tmp_path):
+        """Test handling of various whitespace patterns."""
+        file = tmp_path / "whitespace.py"
+        content = '''#### META: Title: Valid Test File
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test file
+    #### CONTENTS:
+    
+    ####    META:    Extra    Spaces
+    ####\tMETA:\tUsing\tTabs
+    ####META:NoSpaces
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid tag format" in str(exc.value)
+E       AssertionError: assert 'Invalid tag format' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_edge_cases.py:82: AssertionError
+_______________________________ test_empty_tags ________________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_tags0')
+
+    def test_empty_tags(tmp_path):
+        """Test handling of empty tag content."""
+        file = tmp_path / "empty_tags.py"
+        content = '''#### META: Title:
+    #### META: Version:
+    #### META: PATH: test.py
+    #### META: Author: Test
+    
+    #### SYNOPSIS:
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Empty tag content" in str(exc.value)
+E       AssertionError: assert 'Empty tag content' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_edge_cases.py:99: AssertionError
+___________________________ test_duplicate_meta_tags ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_duplicate_meta_tags0')
+
+    def test_duplicate_meta_tags(tmp_path):
+        """Test handling of duplicate META tags."""
+        file = tmp_path / "duplicate_meta.py"
+        content = '''#### META: Title: First Title
+    #### META: Title: Second Title
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Duplicate META tag" in str(exc.value)
+E       AssertionError: assert 'Duplicate META tag' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_edge_cases.py:116: AssertionError
+___________________________ test_invalid_characters ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_invalid_characters0')
+
+    def test_invalid_characters(tmp_path):
+        """Test handling of invalid characters in tags."""
+        file = tmp_path / "invalid_chars.py"
+        content = '''#### META@: Invalid Character
+    #### META: Ver$ion: 0.1.1
+    #### META: Auth*r: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid characters in tag" in str(exc.value)
+E       AssertionError: assert 'Invalid characters in tag' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_edge_cases.py:132: AssertionError
+_________________________ test_full_project_processing _________________________
+
+complex_project = '/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/tmpe8i51o_p'
+
+    def test_full_project_processing(complex_project):
+        """Test processing a complete project structure."""
+        py_file = os.path.join(complex_project, 'src', 'test.py')
+        wal_file = os.path.join(complex_project, 'spec', 'test.wal')
+    
+        # Test Python file
+>       py_tags = parse_file(py_file)
+
+snapshot/test_integration.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/tmpe8i51o_p/src/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+____________________________ test_cross_references _____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cross_references0')
+
+    def test_cross_references(tmp_path):
+        """Test handling of cross-references between files."""
+        content = '''#### META: Title: Cross Reference Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: src/test.py
+    
+    #### SYNOPSIS: Tests cross-references.
+    #### CONTENTS:
+    
+    ### SECTION: core
+    ### LINK: ./utils/helpers.py:123#process_data
+    ### LINK: ../specs/protocol.wal#validation
+    ### END: SECTION: core'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+snapshot/test_integration.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cross_references0/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_metrics_validation ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_metrics_validation0')
+
+    def test_metrics_validation(tmp_path):
+        """Test metrics tag validation."""
+        content = '''#### META: Title: Metrics Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests metrics validation.
+    #### CONTENTS:
+    
+    ### SECTION: performance
+    ### METRICS: coverage 95% complexity 3 time 45mins
+    ### METRICS: $50 £30 €40
+    ### END: SECTION: performance'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+snapshot/test_integration.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_metrics_validation0/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+________________________ test_comment_block_interaction ________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_comment_block_interaction0')
+
+    def test_comment_block_interaction(tmp_path):
+        """Test comment block parsing according to EBNF spec."""
+        content = '''#!/usr/bin/env python3
+    /* #### META: Title: Test */
+    #### META: Title: Real Title
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test comment blocks.
+    #### CONTENTS:'''
+    
+        file = tmp_path / "comment_test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+snapshot/test_integration.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_comment_block_interaction0/comment_test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_________________________ test_strict_ebnf_compliance __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_strict_ebnf_compliance0')
+
+    def test_strict_ebnf_compliance(tmp_path):
+        """Test strict compliance with EBNF grammar specification."""
+        content = '''#### META: Title: EBNF Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests EBNF compliance.
+    #### CONTENTS:
+    
+    ### SECTION: test
+    #### TODO: Test task
+    #### DONE: 12/31/2023 15:30
+    #### FIXME: Important fix
+    #### IDEA: New feature
+    #### REVIEW: Code review
+    #### NOTE: Important note
+    #### TRIAGE: Priority task
+    ### END: SECTION: test'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+snapshot/test_integration.py:219: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_strict_ebnf_compliance0/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________ test_reference_format_validation _______________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_reference_format_validati0')
+
+    def test_reference_format_validation(tmp_path):
+        """Test validation of reference formats in tags."""
+        content = '''#### META: Title: Reference Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests references.
+    #### CONTENTS:
+    
+    ### SECTION: test
+    ### LINK: ./src/file.py:123#function
+    ### LINK: ../invalid:.py#wrong
+    ### END: SECTION: test'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid reference format" in str(exc.value)
+E       AssertionError: assert 'Invalid reference format' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_integration.py:244: AssertionError
+_____________________________ test_python_parsing ______________________________
+
+python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_python_parsing0/test.py'
+
+    def test_python_parsing(python_file):
+        """Test parsing Python-style Wallace tags."""
+>       tags = parse_file(python_file)
+
+snapshot/test_languages.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_python_parsing0/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________________ test_cpp_parsing _______________________________
+
+cpp_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cpp_parsing0/test.cpp'
+
+    def test_cpp_parsing(cpp_file):
+        """Test parsing C++-style Wallace tags."""
+>       tags = parse_file(cpp_file)
+
+snapshot/test_languages.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cpp_parsing0/test.cpp'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_html_parsing _______________________________
+
+html_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_html_parsing0/test.html'
+
+    def test_html_parsing(html_file):
+        """Test parsing HTML-style Wallace tags."""
+>       tags = parse_file(html_file)
+
+snapshot/test_languages.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_html_parsing0/test.html'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________________ test_css_parsing _______________________________
+
+css_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_css_parsing0/test.css'
+
+    def test_css_parsing(css_file):
+        """Test parsing CSS-style Wallace tags."""
+>       tags = parse_file(css_file)
+
+snapshot/test_languages.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_css_parsing0/test.css'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+__________________________ test_mixed_comment_styles ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_mixed_comment_styles0')
+
+    def test_mixed_comment_styles(tmp_path):
+        """Test handling of mixed comment styles in a single file."""
+        file = tmp_path / "mixed.txt"
+        content = '''#### META: Title: Mixed Comments
+    // META: Version: 0.1.1
+    <!-- META: PATH: test/mixed.txt -->
+    
+    #### SYNOPSIS: Tests mixed comment styles.
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid comment style" in str(exc.value)
+E       AssertionError: assert 'Invalid comment style' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_languages.py:174: AssertionError
+__________________________ test_invalid_comment_style __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_invalid_comment_style0')
+
+    def test_invalid_comment_style(tmp_path):
+        """Test handling of invalid comment style for file type."""
+        file = tmp_path / "invalid.py"
+        content = '''// META: Title: Wrong Style
+    // META: Version: 0.1.1
+    // META: Author: Test
+    // META: PATH: test.py
+    
+    // SYNOPSIS: Test
+    // CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid comment style" in str(exc.value)
+E       AssertionError: assert 'Invalid comment style' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_languages.py:190: AssertionError
+__________________________ test_parse_nested_sections __________________________
+
+nested_sections_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_nested_sections0/nested.py'
+
+    def test_parse_nested_sections(nested_sections_file):
+        """Test parsing nested sections."""
+>       tags = parse_file(nested_sections_file)
+
+snapshot/test_sections.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_nested_sections0/nested.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_mismatched_sections ___________________________
+
+mismatched_sections_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_mismatched_sections0/mismatched.py'
+
+    def test_mismatched_sections(mismatched_sections_file):
+        """Test error handling for mismatched section tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(mismatched_sections_file)
+>       assert "Mismatched section tags" in str(exc.value)
+E       AssertionError: assert 'Mismatched section tags' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+snapshot/test_sections.py:86: AssertionError
+______________________________ test_empty_section ______________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_section0')
+
+    def test_empty_section(tmp_path):
+        """Test handling of empty sections."""
+        file = tmp_path / "empty_section.py"
+        content = '''#### META: Title: Empty Section Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test/empty.py
+    
+    #### SYNOPSIS: Test empty sections.
+    #### CONTENTS:
+    
+    ### SECTION: empty
+    ### END: SECTION: empty
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+snapshot/test_sections.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_section0/empty_section.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_____________________________ test_nested_content ______________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_nested_content0')
+
+    def test_nested_content(tmp_path):
+        """Test content within nested sections."""
+        file = tmp_path / "nested_content.py"
+        content = '''#### META: Title: Nested Content Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test/nested_content.py
+    
+    #### SYNOPSIS: Test nested section content.
+    #### CONTENTS:
+    
+    ### SECTION: outer
+    #### TODO: Outer task
+    
+        ### SECTION: inner
+        #### TODO: Inner task
+        ### END: SECTION: inner
+    
+    ### END: SECTION: outer
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+snapshot/test_sections.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_nested_content0/nested_content.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_basic_parsing ______________________________
+
+sample_files = {'python': PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_pa...ath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_parsing0/test.wal')}
+
+    def test_basic_parsing(sample_files):
+        """Verify basic parsing functionality works."""
+        py_file = sample_files["python"]
+>       tags = parse_file(str(py_file))
+
+snapshot/test_smoke.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_parsing0/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_full_workflow ______________________________
+
+file_structure = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_full_workflow0')
+
+    def test_full_workflow(file_structure):
+        """Verify complete workflow using all fixtures."""
+        main_py = file_structure / "src" / "main.py"
+        helper_py = file_structure / "src" / "utils" / "helpers.py"
+        test_py = file_structure / "tests" / "test_main.py"
+    
+        # All files should be parseable
+        for file in [main_py, helper_py, test_py]:
+>           tags = parse_file(str(file))
+
+snapshot/test_smoke.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_full_workflow0/src/main.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_valid_wal_structure ___________________________
+
+valid_wal_json = {'file_type': 'wal', 'structure': {'contents_block': [{'content': [{'content': 'Implement test', 'tag': 'TODO'}, {'tag...nt': 'For validation testing.', 'tag': 'SYNOPSIS'}]}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}
+
+    def test_valid_wal_structure(valid_wal_json):
+        """Test validation of correct WAL structure."""
+>       assert is_valid_wal(valid_wal_json) is True
+E       NameError: name 'is_valid_wal' is not defined
+
+snapshot/test_wal_validator.py:114: NameError
+_____________________________ test_missing_shebang _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_missing_shebang(invalid_wal_jsons):
+        """Test detection of missing shebang."""
+>       assert is_valid_wal(invalid_wal_jsons["missing_shebang"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+snapshot/test_wal_validator.py:118: NameError
+_____________________________ test_incomplete_meta _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_incomplete_meta(invalid_wal_jsons):
+        """Test detection of incomplete META block."""
+>       assert is_valid_wal(invalid_wal_jsons["incomplete_meta"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+snapshot/test_wal_validator.py:122: NameError
+____________________________ test_missing_synopsis _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_missing_synopsis(invalid_wal_jsons):
+        """Test detection of missing SYNOPSIS block."""
+>       assert is_valid_wal(invalid_wal_jsons["missing_synopsis"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+snapshot/test_wal_validator.py:126: NameError
+____________________________ test_unmatched_section ____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_unmatched_section(invalid_wal_jsons):
+        """Test detection of unmatched section tags."""
+>       assert is_valid_wal(invalid_wal_jsons["unmatched_section"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+snapshot/test_wal_validator.py:130: NameError
+_________________________ test_full_project_processing _________________________
+
+complex_project = '/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/tmp_bimd5a6'
+
+    def test_full_project_processing(complex_project):
+        """Test processing a complete project structure."""
+        py_file = os.path.join(complex_project, 'src', 'test.py')
+        wal_file = os.path.join(complex_project, 'spec', 'test.wal')
+    
+        # Test Python file
+>       py_tags = parse_file(py_file)
+
+tests/test_integration.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/tmp_bimd5a6/src/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+____________________________ test_cross_references _____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cross_references1')
+
+    def test_cross_references(tmp_path):
+        """Test handling of cross-references between files."""
+        content = '''#### META: Title: Cross Reference Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: src/test.py
+    
+    #### SYNOPSIS: Tests cross-references.
+    #### CONTENTS:
+    
+    ### SECTION: core
+    ### LINK: ./utils/helpers.py:123#process_data
+    ### LINK: ../specs/protocol.wal#validation
+    ### END: SECTION: core'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+tests/test_integration.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cross_references1/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_metrics_validation ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_metrics_validation1')
+
+    def test_metrics_validation(tmp_path):
+        """Test metrics tag validation."""
+        content = '''#### META: Title: Metrics Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests metrics validation.
+    #### CONTENTS:
+    
+    ### SECTION: performance
+    ### METRICS: coverage 95% complexity 3 time 45mins
+    ### METRICS: $50 £30 €40
+    ### END: SECTION: performance'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+tests/test_integration.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_metrics_validation1/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+________________________ test_comment_block_interaction ________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_comment_block_interaction1')
+
+    def test_comment_block_interaction(tmp_path):
+        """Test comment block parsing according to EBNF spec."""
+        content = '''#!/usr/bin/env python3
+    /* #### META: Title: Test */
+    #### META: Title: Real Title
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test comment blocks.
+    #### CONTENTS:'''
+    
+        file = tmp_path / "comment_test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+tests/test_integration.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_comment_block_interaction1/comment_test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_________________________ test_strict_ebnf_compliance __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_strict_ebnf_compliance1')
+
+    def test_strict_ebnf_compliance(tmp_path):
+        """Test strict compliance with EBNF grammar specification."""
+        content = '''#### META: Title: EBNF Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests EBNF compliance.
+    #### CONTENTS:
+    
+    ### SECTION: test
+    #### TODO: Test task
+    #### DONE: 12/31/2023 15:30
+    #### FIXME: Important fix
+    #### IDEA: New feature
+    #### REVIEW: Code review
+    #### NOTE: Important note
+    #### TRIAGE: Priority task
+    ### END: SECTION: test'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+>       tags = parse_file(str(file))
+
+tests/test_integration.py:219: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_strict_ebnf_compliance1/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________ test_reference_format_validation _______________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_reference_format_validati1')
+
+    def test_reference_format_validation(tmp_path):
+        """Test validation of reference formats in tags."""
+        content = '''#### META: Title: Reference Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Tests references.
+    #### CONTENTS:
+    
+    ### SECTION: test
+    ### LINK: ./src/file.py:123#function
+    ### LINK: ../invalid:.py#wrong
+    ### END: SECTION: test'''
+    
+        file = tmp_path / "test.py"
+        file.write_text(content)
+    
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid reference format" in str(exc.value)
+E       AssertionError: assert 'Invalid reference format' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_integration.py:244: AssertionError
+______________________________ test_basic_parsing ______________________________
+
+sample_files = {'python': PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_pa...ath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_parsing1/test.wal')}
+
+    def test_basic_parsing(sample_files):
+        """Verify basic parsing functionality works."""
+        py_file = sample_files["python"]
+>       tags = parse_file(str(py_file))
+
+tests/test_smoke.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_basic_parsing1/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_full_workflow ______________________________
+
+file_structure = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_full_workflow1')
+
+    def test_full_workflow(file_structure):
+        """Verify complete workflow using all fixtures."""
+        main_py = file_structure / "src" / "main.py"
+        helper_py = file_structure / "src" / "utils" / "helpers.py"
+        test_py = file_structure / "tests" / "test_main.py"
+    
+        # All files should be parseable
+        for file in [main_py, helper_py, test_py]:
+>           tags = parse_file(str(file))
+
+tests/test_smoke.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_full_workflow1/src/main.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_validate_tag _______________________________
+
+    def test_validate_tag():
+        """Test basic tag validation."""
+>       assert core.validate_tag("#### META: Test")
+E       AttributeError: module 'wallace.core' has no attribute 'validate_tag'
+
+tests/test_files/test_core.py:13: AttributeError
+____________________________ test_parse_valid_file _____________________________
+
+valid_python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_valid_file1/valid.py'
+
+    def test_parse_valid_file(valid_python_file):
+        """Test parsing a valid Python file with Wallace tags."""
+>       tags = parse_file(valid_python_file)
+
+tests/test_parser/test_basic.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_valid_file1/valid.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_parse_invalid_file ____________________________
+
+invalid_python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_invalid_file1/invalid.py'
+
+    def test_parse_invalid_file(invalid_python_file):
+        """Test parsing a file with invalid Wallace tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(invalid_python_file)
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_basic.py:82: AssertionError
+_______________________________ test_empty_file ________________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_file1')
+
+    def test_empty_file(tmp_path):
+        """Test parsing an empty file."""
+        file = tmp_path / "empty.py"
+        file.write_text("")
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Empty file'
+E        +  where 'Empty file' = str(WallaceError('Empty file'))
+E        +    where WallaceError('Empty file') = <ExceptionInfo WallaceError('Empty file') tblen=2>.value
+
+tests/test_parser/test_basic.py:96: AssertionError
+___________________________ test_validate_meta_tags ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_meta_tags1')
+
+    def test_validate_meta_tags(tmp_path):
+        """Test validation of META tags."""
+        file = tmp_path / "meta_tags.py"
+        content = '''#### META: Title: Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+tests/test_parser/test_basic.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_meta_tags1/meta_tags.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_________________________ test_validate_synopsis_tags __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_synopsis_tags1')
+
+    def test_validate_synopsis_tags(tmp_path):
+        """Test validation of SYNOPSIS tags."""
+        file = tmp_path / "synopsis_tags.py"
+        content = '''#### META: Title: Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: First line
+    #### SYNOPSIS: Second line
+    #### SYNOPSIS: Third line
+    
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+tests/test_parser/test_basic.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_validate_synopsis_tags1/synopsis_tags.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_malformed_meta_tags ___________________________
+
+malformed_meta_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_malformed_meta_tags1/malformed_meta.py'
+
+    def test_malformed_meta_tags(malformed_meta_file):
+        """Test handling of malformed META tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(malformed_meta_file)
+>       assert "Missing required header elements" in str(exc.value)
+E       AssertionError: assert 'Missing required header elements' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_edge_cases.py:55: AssertionError
+____________________________ test_unicode_handling _____________________________
+
+unicode_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_unicode_handling1/unicode.py'
+
+    def test_unicode_handling(unicode_file):
+        """Test parsing file with Unicode characters."""
+>       tags = parse_file(unicode_file)
+
+tests/test_parser/test_edge_cases.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_unicode_handling1/unicode.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_whitespace_variants ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_whitespace_variants1')
+
+    def test_whitespace_variants(tmp_path):
+        """Test handling of various whitespace patterns."""
+        file = tmp_path / "whitespace.py"
+        content = '''#### META: Title: Valid Test File
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test file
+    #### CONTENTS:
+    
+    ####    META:    Extra    Spaces
+    ####\tMETA:\tUsing\tTabs
+    ####META:NoSpaces
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid tag format" in str(exc.value)
+E       AssertionError: assert 'Invalid tag format' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_edge_cases.py:82: AssertionError
+_______________________________ test_empty_tags ________________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_tags1')
+
+    def test_empty_tags(tmp_path):
+        """Test handling of empty tag content."""
+        file = tmp_path / "empty_tags.py"
+        content = '''#### META: Title:
+    #### META: Version:
+    #### META: PATH: test.py
+    #### META: Author: Test
+    
+    #### SYNOPSIS:
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Empty tag content" in str(exc.value)
+E       AssertionError: assert 'Empty tag content' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_edge_cases.py:99: AssertionError
+___________________________ test_duplicate_meta_tags ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_duplicate_meta_tags1')
+
+    def test_duplicate_meta_tags(tmp_path):
+        """Test handling of duplicate META tags."""
+        file = tmp_path / "duplicate_meta.py"
+        content = '''#### META: Title: First Title
+    #### META: Title: Second Title
+    #### META: Version: 0.1.1
+    #### META: Author: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Duplicate META tag" in str(exc.value)
+E       AssertionError: assert 'Duplicate META tag' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_edge_cases.py:116: AssertionError
+___________________________ test_invalid_characters ____________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_invalid_characters1')
+
+    def test_invalid_characters(tmp_path):
+        """Test handling of invalid characters in tags."""
+        file = tmp_path / "invalid_chars.py"
+        content = '''#### META@: Invalid Character
+    #### META: Ver$ion: 0.1.1
+    #### META: Auth*r: Test
+    #### META: PATH: test.py
+    
+    #### SYNOPSIS: Test
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid characters in tag" in str(exc.value)
+E       AssertionError: assert 'Invalid characters in tag' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_edge_cases.py:132: AssertionError
+_____________________________ test_python_parsing ______________________________
+
+python_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_python_parsing1/test.py'
+
+    def test_python_parsing(python_file):
+        """Test parsing Python-style Wallace tags."""
+>       tags = parse_file(python_file)
+
+tests/test_parser/test_languages.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_python_parsing1/test.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________________ test_cpp_parsing _______________________________
+
+cpp_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cpp_parsing1/test.cpp'
+
+    def test_cpp_parsing(cpp_file):
+        """Test parsing C++-style Wallace tags."""
+>       tags = parse_file(cpp_file)
+
+tests/test_parser/test_languages.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_cpp_parsing1/test.cpp'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+______________________________ test_html_parsing _______________________________
+
+html_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_html_parsing1/test.html'
+
+    def test_html_parsing(html_file):
+        """Test parsing HTML-style Wallace tags."""
+>       tags = parse_file(html_file)
+
+tests/test_parser/test_languages.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_html_parsing1/test.html'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_______________________________ test_css_parsing _______________________________
+
+css_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_css_parsing1/test.css'
+
+    def test_css_parsing(css_file):
+        """Test parsing CSS-style Wallace tags."""
+>       tags = parse_file(css_file)
+
+tests/test_parser/test_languages.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_css_parsing1/test.css'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+__________________________ test_mixed_comment_styles ___________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_mixed_comment_styles1')
+
+    def test_mixed_comment_styles(tmp_path):
+        """Test handling of mixed comment styles in a single file."""
+        file = tmp_path / "mixed.txt"
+        content = '''#### META: Title: Mixed Comments
+    // META: Version: 0.1.1
+    <!-- META: PATH: test/mixed.txt -->
+    
+    #### SYNOPSIS: Tests mixed comment styles.
+    #### CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid comment style" in str(exc.value)
+E       AssertionError: assert 'Invalid comment style' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_languages.py:174: AssertionError
+__________________________ test_invalid_comment_style __________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_invalid_comment_style1')
+
+    def test_invalid_comment_style(tmp_path):
+        """Test handling of invalid comment style for file type."""
+        file = tmp_path / "invalid.py"
+        content = '''// META: Title: Wrong Style
+    // META: Version: 0.1.1
+    // META: Author: Test
+    // META: PATH: test.py
+    
+    // SYNOPSIS: Test
+    // CONTENTS:
+    '''
+        file.write_text(content)
+        with pytest.raises(WallaceError) as exc:
+            parse_file(str(file))
+>       assert "Invalid comment style" in str(exc.value)
+E       AssertionError: assert 'Invalid comment style' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_languages.py:190: AssertionError
+__________________________ test_parse_nested_sections __________________________
+
+nested_sections_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_nested_sections1/nested.py'
+
+    def test_parse_nested_sections(nested_sections_file):
+        """Test parsing nested sections."""
+>       tags = parse_file(nested_sections_file)
+
+tests/test_parser/test_sections.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_parse_nested_sections1/nested.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_mismatched_sections ___________________________
+
+mismatched_sections_file = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_mismatched_sections1/mismatched.py'
+
+    def test_mismatched_sections(mismatched_sections_file):
+        """Test error handling for mismatched section tags."""
+        with pytest.raises(WallaceError) as exc:
+            parse_file(mismatched_sections_file)
+>       assert "Mismatched section tags" in str(exc.value)
+E       AssertionError: assert 'Mismatched section tags' in 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'
+E        +  where 'Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag' = str(WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag'))
+E        +    where WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') = <ExceptionInfo WallaceError('Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag') tblen=2>.value
+
+tests/test_parser/test_sections.py:86: AssertionError
+______________________________ test_empty_section ______________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_section1')
+
+    def test_empty_section(tmp_path):
+        """Test handling of empty sections."""
+        file = tmp_path / "empty_section.py"
+        content = '''#### META: Title: Empty Section Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test/empty.py
+    
+    #### SYNOPSIS: Test empty sections.
+    #### CONTENTS:
+    
+    ### SECTION: empty
+    ### END: SECTION: empty
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+tests/test_parser/test_sections.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_empty_section1/empty_section.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+_____________________________ test_nested_content ______________________________
+
+tmp_path = PosixPath('/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_nested_content1')
+
+    def test_nested_content(tmp_path):
+        """Test content within nested sections."""
+        file = tmp_path / "nested_content.py"
+        content = '''#### META: Title: Nested Content Test
+    #### META: Version: 0.1.1
+    #### META: Author: Test Suite
+    #### META: PATH: test/nested_content.py
+    
+    #### SYNOPSIS: Test nested section content.
+    #### CONTENTS:
+    
+    ### SECTION: outer
+    #### TODO: Outer task
+    
+        ### SECTION: inner
+        #### TODO: Inner task
+        ### END: SECTION: inner
+    
+    ### END: SECTION: outer
+    '''
+        file.write_text(content)
+>       tags = parse_file(str(file))
+
+tests/test_parser/test_sections.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file_path = '/private/var/folders/45/hdxy7_qn09lbq6wvg4ny8c940000gn/T/pytest-of-marks/pytest-17/test_nested_content1/nested_content.py'
+
+    def parse_file(file_path: str) -> List[WallaceTag]:
+        """Basic file parser for smoke tests."""
+        # Validate file exists
+        path = Path(file_path)
+        if not path.exists():
+            raise core.WallaceError(f"File not found: {file_path}")
+    
+        # Read file content
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            raise core.WallaceError(f"Failed to read file: {str(e)}")
+    
+        # Empty file check
+        if not content.strip():
+            raise core.WallaceError("Empty file")
+    
+        # Validate structure
+        errors = core.validate_file_structure(file_path, content)
+        if errors:
+>           raise core.WallaceError(f"Invalid file structure: {', '.join(errors)}")
+E           wallace.core.WallaceError: Invalid file structure: Missing META tags, Missing SYNOPSIS tags, Missing CONTENTS tag
+
+src/wallace/parser.py:45: WallaceError
+___________________________ test_valid_wal_structure ___________________________
+
+valid_wal_json = {'file_type': 'wal', 'structure': {'contents_block': [{'content': [{'content': 'Implement test', 'tag': 'TODO'}, {'tag...nt': 'For validation testing.', 'tag': 'SYNOPSIS'}]}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}
+
+    def test_valid_wal_structure(valid_wal_json):
+        """Test validation of correct WAL structure."""
+>       assert is_valid_wal(valid_wal_json) is True
+E       NameError: name 'is_valid_wal' is not defined
+
+tests/test_parser/test_wal_validator.py:114: NameError
+_____________________________ test_missing_shebang _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_missing_shebang(invalid_wal_jsons):
+        """Test detection of missing shebang."""
+>       assert is_valid_wal(invalid_wal_jsons["missing_shebang"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+tests/test_parser/test_wal_validator.py:118: NameError
+_____________________________ test_incomplete_meta _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_incomplete_meta(invalid_wal_jsons):
+        """Test detection of incomplete META block."""
+>       assert is_valid_wal(invalid_wal_jsons["incomplete_meta"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+tests/test_parser/test_wal_validator.py:122: NameError
+____________________________ test_missing_synopsis _____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_missing_synopsis(invalid_wal_jsons):
+        """Test detection of missing SYNOPSIS block."""
+>       assert is_valid_wal(invalid_wal_jsons["missing_synopsis"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+tests/test_parser/test_wal_validator.py:126: NameError
+____________________________ test_unmatched_section ____________________________
+
+invalid_wal_jsons = {'incomplete_meta': {'file_type': 'wal', 'structure': {'header_block': {'meta_block': [{'key': 'Title', 'tag': 'META',...e': 'test', 'type': 'section'}], 'header_block': {}, 'shebang': '#!/usr/bin/env wallace'}, 'wallace_version': '0.1.1'}}
+
+    def test_unmatched_section(invalid_wal_jsons):
+        """Test detection of unmatched section tags."""
+>       assert is_valid_wal(invalid_wal_jsons["unmatched_section"]) is False
+E       NameError: name 'is_valid_wal' is not defined
+
+tests/test_parser/test_wal_validator.py:130: NameError
+=========================== short test summary info ============================
+FAILED snapshot/test_basic.py::test_parse_valid_file - wallace.core.WallaceEr...
+FAILED snapshot/test_basic.py::test_parse_invalid_file - AssertionError: asse...
+FAILED snapshot/test_basic.py::test_empty_file - AssertionError: assert 'Miss...
+FAILED snapshot/test_basic.py::test_validate_meta_tags - wallace.core.Wallace...
+FAILED snapshot/test_basic.py::test_validate_synopsis_tags - wallace.core.Wal...
+FAILED snapshot/test_core.py::test_validate_tag - AttributeError: module 'wal...
+FAILED snapshot/test_edge_cases.py::test_malformed_meta_tags - AssertionError...
+FAILED snapshot/test_edge_cases.py::test_unicode_handling - wallace.core.Wall...
+FAILED snapshot/test_edge_cases.py::test_whitespace_variants - AssertionError...
+FAILED snapshot/test_edge_cases.py::test_empty_tags - AssertionError: assert ...
+FAILED snapshot/test_edge_cases.py::test_duplicate_meta_tags - AssertionError...
+FAILED snapshot/test_edge_cases.py::test_invalid_characters - AssertionError:...
+FAILED snapshot/test_integration.py::test_full_project_processing - wallace.c...
+FAILED snapshot/test_integration.py::test_cross_references - wallace.core.Wal...
+FAILED snapshot/test_integration.py::test_metrics_validation - wallace.core.W...
+FAILED snapshot/test_integration.py::test_comment_block_interaction - wallace...
+FAILED snapshot/test_integration.py::test_strict_ebnf_compliance - wallace.co...
+FAILED snapshot/test_integration.py::test_reference_format_validation - Asser...
+FAILED snapshot/test_languages.py::test_python_parsing - wallace.core.Wallace...
+FAILED snapshot/test_languages.py::test_cpp_parsing - wallace.core.WallaceErr...
+FAILED snapshot/test_languages.py::test_html_parsing - wallace.core.WallaceEr...
+FAILED snapshot/test_languages.py::test_css_parsing - wallace.core.WallaceErr...
+FAILED snapshot/test_languages.py::test_mixed_comment_styles - AssertionError...
+FAILED snapshot/test_languages.py::test_invalid_comment_style - AssertionErro...
+FAILED snapshot/test_sections.py::test_parse_nested_sections - wallace.core.W...
+FAILED snapshot/test_sections.py::test_mismatched_sections - AssertionError: ...
+FAILED snapshot/test_sections.py::test_empty_section - wallace.core.WallaceEr...
+FAILED snapshot/test_sections.py::test_nested_content - wallace.core.WallaceE...
+FAILED snapshot/test_smoke.py::test_basic_parsing - wallace.core.WallaceError...
+FAILED snapshot/test_smoke.py::test_full_workflow - wallace.core.WallaceError...
+FAILED snapshot/test_wal_validator.py::test_valid_wal_structure - NameError: ...
+FAILED snapshot/test_wal_validator.py::test_missing_shebang - NameError: name...
+FAILED snapshot/test_wal_validator.py::test_incomplete_meta - NameError: name...
+FAILED snapshot/test_wal_validator.py::test_missing_synopsis - NameError: nam...
+FAILED snapshot/test_wal_validator.py::test_unmatched_section - NameError: na...
+FAILED tests/test_integration.py::test_full_project_processing - wallace.core...
+FAILED tests/test_integration.py::test_cross_references - wallace.core.Wallac...
+FAILED tests/test_integration.py::test_metrics_validation - wallace.core.Wall...
+FAILED tests/test_integration.py::test_comment_block_interaction - wallace.co...
+FAILED tests/test_integration.py::test_strict_ebnf_compliance - wallace.core....
+FAILED tests/test_integration.py::test_reference_format_validation - Assertio...
+FAILED tests/test_smoke.py::test_basic_parsing - wallace.core.WallaceError: I...
+FAILED tests/test_smoke.py::test_full_workflow - wallace.core.WallaceError: I...
+FAILED tests/test_files/test_core.py::test_validate_tag - AttributeError: mod...
+FAILED tests/test_parser/test_basic.py::test_parse_valid_file - wallace.core....
+FAILED tests/test_parser/test_basic.py::test_parse_invalid_file - AssertionEr...
+FAILED tests/test_parser/test_basic.py::test_empty_file - AssertionError: ass...
+FAILED tests/test_parser/test_basic.py::test_validate_meta_tags - wallace.cor...
+FAILED tests/test_parser/test_basic.py::test_validate_synopsis_tags - wallace...
+FAILED tests/test_parser/test_edge_cases.py::test_malformed_meta_tags - Asser...
+FAILED tests/test_parser/test_edge_cases.py::test_unicode_handling - wallace....
+FAILED tests/test_parser/test_edge_cases.py::test_whitespace_variants - Asser...
+FAILED tests/test_parser/test_edge_cases.py::test_empty_tags - AssertionError...
+FAILED tests/test_parser/test_edge_cases.py::test_duplicate_meta_tags - Asser...
+FAILED tests/test_parser/test_edge_cases.py::test_invalid_characters - Assert...
+FAILED tests/test_parser/test_languages.py::test_python_parsing - wallace.cor...
+FAILED tests/test_parser/test_languages.py::test_cpp_parsing - wallace.core.W...
+FAILED tests/test_parser/test_languages.py::test_html_parsing - wallace.core....
+FAILED tests/test_parser/test_languages.py::test_css_parsing - wallace.core.W...
+FAILED tests/test_parser/test_languages.py::test_mixed_comment_styles - Asser...
+FAILED tests/test_parser/test_languages.py::test_invalid_comment_style - Asse...
+FAILED tests/test_parser/test_sections.py::test_parse_nested_sections - walla...
+FAILED tests/test_parser/test_sections.py::test_mismatched_sections - Asserti...
+FAILED tests/test_parser/test_sections.py::test_empty_section - wallace.core....
+FAILED tests/test_parser/test_sections.py::test_nested_content - wallace.core...
+FAILED tests/test_parser/test_wal_validator.py::test_valid_wal_structure - Na...
+FAILED tests/test_parser/test_wal_validator.py::test_missing_shebang - NameEr...
+FAILED tests/test_parser/test_wal_validator.py::test_incomplete_meta - NameEr...
+FAILED tests/test_parser/test_wal_validator.py::test_missing_synopsis - NameE...
+FAILED tests/test_parser/test_wal_validator.py::test_unmatched_section - Name...
+======================== 70 failed, 104 passed in 0.27s ========================

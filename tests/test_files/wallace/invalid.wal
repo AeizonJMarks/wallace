@@ -1,0 +1,33 @@
+# Missing shebang
+#### META: Title: Invalid WAL File
+#### META: Version: 0.1.1
+
+# Wrong order (should have shebang first)
+#### META: Title: Wrong Order
+#!/usr/bin/env wallace
+
+# Missing required META tags
+#!/usr/bin/env wallace
+#### META: Title: Missing Tags
+#### SYNOPSIS: Missing PATH and Version
+
+# Invalid section nesting
+#!/usr/bin/env wallace
+#### META: Title: Invalid Nesting
+#### META: Version: 0.1.1
+#### META: Author: Test
+#### META: PATH: test.wal
+
+#### SYNOPSIS: Test invalid nesting.
+#### CONTENTS:
+
+### SECTION: outer
+### SECTION: inner
+#### TODO: Test
+### END: SECTION: outer
+### END: SECTION: inner
+
+# Invalid metrics format
+#### METRICS: 95 # Missing unit
+#### METRICS: coverage95% # Missing space
+#### METRICS: efficiency ABC # Non-numeric value
